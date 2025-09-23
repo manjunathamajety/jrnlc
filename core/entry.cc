@@ -1,5 +1,5 @@
 //This is the implementation file for adding an entry into the journal.
-//#include <entry.h>
+#include <entry.h>
 #include <iostream>
 #include <string>
 #include <filesystem>
@@ -14,12 +14,10 @@ inline std::int64_t timestamp(){
 
 }
 
-int main(){
+void entry(std:: string txt){
 
-    long long now;
-    now=timestamp();
     std::ofstream file("input.txt",std::ios::app);
-    file<<now<<"::"<<"New Wrold"<<"\n";
+    file<<timestamp()<<"::"<<txt<<"\n";
     file.close();
    
 

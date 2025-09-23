@@ -3,3 +3,7 @@
 
 #temporary files
 *.txt
+
+#cmake build directory
+#this is regenerated every build, so no point in versioning
+build/

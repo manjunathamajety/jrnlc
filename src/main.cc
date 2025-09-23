@@ -1,5 +1,5 @@
 #include <iostream>
-//#include <entry.h>
+#include <entry.h>
 
 int main(int argc,char** argv){
   
@@ -19,8 +19,7 @@ int main(int argc,char** argv){
     
         if (arg=="-a"){
             std::string str=argv[2];
-            std::cout<<"Journal Entry for the string:"<<str;
-
+            entry(str);
         }
 
         if (arg=="-l"){
