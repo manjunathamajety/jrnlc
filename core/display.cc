@@ -15,7 +15,7 @@ std::string timeconvert(std::string timestamp){
 
 void displayn(int n){
     
-    std::ifstream fread("input.txt");
+    std::ifstream fread("jrnl.txt");
     for(int i=0;i<n;i++){
         std::string timestamp, text;
         std::getline(fread,timestamp,':');
@@ -31,7 +31,7 @@ void displayn(int n){
 void display(std::string num){
     
     std::string text,timestamp;
-    std::ifstream file("input.txt");
+    std::ifstream file("jrnl.txt");
     if(num=="-all"){
     
         while(!file.eof()){

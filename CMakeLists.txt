@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 3.10)
 #Project: Journal
 #Cmake file
-project(journal)
+project(jrnl)
 set(CMAKE_CXX_STANDARD 17)
 
 
-add_executable(journal src/main.cc core/entry.cc core/display.cc)
+add_executable(jrnl src/main.cc core/entry.cc core/display.cc)
 
-target_include_directories(journal PRIVATE include )
+target_include_directories(jrnl PRIVATE include )
 
 

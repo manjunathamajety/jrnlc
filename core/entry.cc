@@ -11,7 +11,7 @@ inline std::int64_t timestamp(){
 
 void entry(std:: string txt){
 
-    std::ofstream file("input.txt",std::ios::app);
+    std::ofstream file("jrnl.txt",std::ios::app);
     file<<"\n"<<timestamp()<<"::"<<txt;
     file.close();
    
