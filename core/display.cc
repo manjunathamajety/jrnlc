@@ -20,7 +20,7 @@ void displayn(int n){
         std::string timestamp, text;
         std::getline(fread,timestamp,':');
         std::getline(fread,text);
-        std::cout<<"\x1b[32m"<<timeconvert(timestamp)<<"\x1b[0m"<<""<<text<<"\n";
+        std::cout<<GREEN<<timeconvert(timestamp)<<RESET<<""<<text<<"\n";
 
     }
     fread.close();
@@ -37,7 +37,7 @@ void display(std::string num){
         while(!file.eof()){
             std::getline(file,timestamp,':');
             std::getline(file,text);
-            std::cout<<"\x1b[32m"<<timeconvert(timestamp)<<"\x1b[0m"<<""<<text<<"\n";
+            std::cout<<GREEN<<timeconvert(timestamp)<<RESET<<""<<text<<"\n";
 
         }
     }
@@ -50,5 +50,3 @@ void display(std::string num){
     file.close();
 
 }
-
-
