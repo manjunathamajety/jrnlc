@@ -5,7 +5,7 @@ project(jrnl)
 set(CMAKE_CXX_STANDARD 17)
 
 
-add_executable(jrnl src/main.cc core/entry.cc core/display.cc)
+add_executable(jrnl src/main.cc core/timestamp.cc core/jrnlmanager.cc)
 
 target_include_directories(jrnl PRIVATE include )
 

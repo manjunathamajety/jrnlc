@@ -8,4 +8,6 @@
 #this is regenerated every build, so no point in versioning
 build/
 
-
+#docs directory, excluding everything except the pdf file
+docs/*
+!docs/design.pdf
