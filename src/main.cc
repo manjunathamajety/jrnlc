@@ -1,6 +1,4 @@
 #include <iostream>
-#include <entry.h>
-#include <display.h>
 #include <journal.h>
 #include <jrnlmanager.h>
 
@@ -23,15 +21,15 @@ int main(int argc,char** argv){
     
         if (arg=="-a"){
             std::string str=argv[2];
-            //entry(str);
+            
             m1.addentry(str);
             m1.save();
         }
 
         if (arg=="-l"){
             std::string str=argv[2];
-            m1.display();
-            //display(str);
+            
+            m1.display(str);
             m1.save();
         }
 

@@ -1,8 +1,13 @@
 #include <jrnlmanager.h>
 
+inline int int_convert(char num_char){
+    
+    int n=num_char-'0';
+    return n;
+}
 
 manager::manager(){
-    int i=0;
+
     std::ifstream file("jrnl.txt");
     //Initializes jrnl-objects in the jrnl_manager vector.
     std::string id,tag,stamp,txt;
@@ -12,13 +17,12 @@ manager::manager(){
         std::getline(file,tag,';')&&
         std::getline(file,stamp,';')&&
         std::getline(file,txt)){
-        
+                
         char c=tag[0];
         long long times=std::stoll(stamp);
         time_t t=static_cast<time_t>(times);
         //pushes the entry to the last of the vector jrnl_manager
         jrnl_manager.emplace_back(std::stoi(id),c,t,txt);
-        i++;
         
     }
     file.close();
@@ -28,21 +32,49 @@ manager::manager(){
 
 }
 
-
 void manager::addentry(std::string txt){
+
     jrnl_manager.emplace_back(67,'A',timestamp(),txt);
-    std::cout<<"Entry added successfully";
+
 }
 
-void manager::display(){
+void manager::display(std::string range){
     
-    for(int i=0;i<jrnl_manager.size();i++){
+    int start, end;
+    //manual parsing logic to set start and end based upon the request
+    if(range.length()>2){
+        
+    }
+    else if(range.length()==1){
+            //function to print the entire journal 
+        if(range=="*"){
+            start=0;
+            end=jrnl_manager.size();
+        }
+        else{
+            start=int_convert(range[0])-1;
+            end=start+1;
+        }
+    }
+    else if(range.length()==2){
+        if(range[0]=='*'){
+            start=0;
+            end=int_convert(range[1]);
+        }
+        else if(range[1]=='*'){
+            start=jrnl_manager.size()-int_convert(range[0]);
+            end=jrnl_manager.size();
+        }
+    }
+    
+    for(int i=start;i<end;i++){
+        //each iteration of loop loads the corresponding jrnl_manager element into a temporary variable for display 
         int id=jrnl_manager[i].getid();
         char tag=jrnl_manager[i].gettag();
         time_t timestamp=jrnl_manager[i].getstamp();
         std::string txt=jrnl_manager[i].getentry();
-
-        std::cout<<BLUE<<id<<RESET<<" "<<tag<<" "<<GREEN<<timestamp<<RESET<<" "<<txt<<"\n";
+        //Printing each entry with formatting 
+        std::cout<<GREEN<<id<<RESET<<" "<<tag<<" "<<GREEN<<timestamp<<RESET<<" "<<txt<<"\n";
     }
 
 }
@@ -50,7 +82,7 @@ void manager::display(){
 void manager::save(){
     
     std::ofstream savefile("jrnl.txt",std::ios::app);
-    
+        //Loop uses jrnl_manager size as a limiting condition    
         for(int i=0;i<jrnl_manager.size();i++){
         savefile<<jrnl_manager[i].getid()<<";"<<jrnl_manager[i].gettag()<<";"<<jrnl_manager[i].getstamp()<<";"<<jrnl_manager[i].getentry()<<"\n";
 

@@ -28,7 +28,7 @@ class manager{
     manager();
     void addentry(std::string txt);
     void save();
-    void display();
+    void display(std::string range);
 };
 
 
