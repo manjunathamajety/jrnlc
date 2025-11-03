@@ -24,12 +24,14 @@ class manager{
 
     private: 
     std::vector<jrnl> jrnl_manager;
+    int id_count;
 
     public:
     manager(std::string PATH);
-    void addentry(std::string txt);
+    void addentry(std::string txt,char tag='J');
     void save(std::string PATH);
     void display(std::string range);
+    int getid_count(){return id_count;}
 };
 
 #endif

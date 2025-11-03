@@ -26,9 +26,9 @@ manager::manager(std::string PATH){
 
 }
 
-void manager::addentry(std::string txt){
-
-    jrnl_manager.emplace_back(67,'A',timestamp(),txt);
+void manager::addentry(std::string txt,char tag){
+    id_count=jrnl_manager.back().getid(); 
+    jrnl_manager.emplace_back(id_count+1,tag,timestamp(),txt);
 
 }
 
