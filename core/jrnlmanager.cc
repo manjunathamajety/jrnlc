@@ -12,11 +12,10 @@ manager::manager(std::string PATH){
         std::getline(file,stamp,';')&&
         std::getline(file,txt)){
                 
-        char c=tag[0];
         long long times=std::stoll(stamp);
         time_t t=static_cast<time_t>(times);
         //pushes the entry to the last of the vector jrnl_manager
-        jrnl_manager.emplace_back(std::stoi(id),c,t,txt);
+        jrnl_manager.emplace_back(std::stoi(id),tag,t,txt);
         
     }
     file.close();
@@ -31,9 +30,10 @@ manager::manager(std::string PATH){
     }
 }
 
-void manager::addentry(std::string txt,char tag){
+void manager::addentry(std::string txt,std::string tag){
     jrnl_manager.emplace_back(id_count+1,tag,timestamp(),txt);
 }
+
 
 void manager::display(std::string range){
     
@@ -67,7 +67,7 @@ void manager::display(std::string range){
     for(int i=start;i<end;i++){
         //each iteration of loop loads the corresponding jrnl_manager element into a temporary variable for display 
         int id=jrnl_manager[i].getid();
-        char tag=jrnl_manager[i].gettag();
+        std::string tag=jrnl_manager[i].gettag();
         time_t timestamp=jrnl_manager[i].getstamp();
         std::string txt=jrnl_manager[i].getentry();
         //Printing each entry with formatting 

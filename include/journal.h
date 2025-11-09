@@ -14,7 +14,7 @@ class jrnl{
     private:
         
         int id;
-        char tag;
+        std::string tag;
         time_t timestamp;
         std::string text;
 
@@ -22,10 +22,10 @@ class jrnl{
         
         //The constructor uses initializer list, to avoid overheads in string assignment. 
         //Move is used to avoid the overheads involved in copying, instead transfers the string.
-        jrnl (int i, char t, time_t stamp,std::string txt) : id(i), tag(t), timestamp(stamp), text(std::move(txt)){};
+        jrnl (int i, std::string t, time_t stamp,std::string txt) : id(i), tag(std::move(t)), timestamp(stamp), text(std::move(txt)){};
         
         int getid(){return id;}
-        char gettag(){return tag;}
+        std::string gettag(){return tag;}
         time_t getstamp(){return timestamp;}
         std::string getentry(){return text;}
         

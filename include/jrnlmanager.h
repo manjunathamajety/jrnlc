@@ -28,7 +28,7 @@ class manager{
 
     public:
     manager(std::string PATH);
-    void addentry(std::string txt,char tag='J');
+    void addentry(std::string txt,std::string tag="jrnl");
     void save(std::string PATH);
     void display(std::string range);
     int getid_count(){return id_count;}
