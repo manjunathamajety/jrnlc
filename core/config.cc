@@ -19,18 +19,18 @@ config::config(){
     //checking if the config directory exists
     std::filesystem::path config_dir = std::filesystem::path(config_path).parent_path();
     if(!std::filesystem::exists(config_dir)){
-        std::cout<<"Creating config file directory at ", std::string(config_dir);
+        std::cout<<"To tell your journal where you would wanna store your secrets...." <<config_dir<<std::endl;
         std::filesystem::create_directories(config_dir);
     }
 
     //creating the file with default values, if it doesn't exist
     if(!std::filesystem::exists(config_path)){
-        std::cout<<"\nConfig file doesn't exist, initalizing with defaults";
+        std::cout<<"Your journal couldn't find where to store your secrets. Due to the lack of choice, storing it in a default location -_-"<<std::endl;
         std::ofstream outfile(config_path);
         
         std::string data_path;
         if(!outfile.is_open()){
-            throw std::runtime_error("Failed to open config file:"+config_path);
+            throw std::runtime_error("And.... yeah, your journals config file coudn't be opened at "+config_path);
         }
         if(xdg_data == NULL){
             data_path=std::string(home)+"/.local/share/jrnl/journal.txt";
@@ -51,7 +51,7 @@ config::config(){
     //checking if the journal target directory exists, creating it not
     std::filesystem::path jrnl_dir = std::filesystem::path(PATH).parent_path();
     if(!std::filesystem::exists(jrnl_dir)){
-        std::cout<<"Creating journal file directory at", std::string(jrnl_dir);
+        std::cout<<"Storing your secrets at "<<jrnl_dir<<std::endl;
         std::filesystem::create_directories(jrnl_dir);
     }
 
@@ -59,7 +59,7 @@ config::config(){
     if(!std::filesystem::exists(PATH)){
         std::ofstream jrnlfile(PATH);
         if(!jrnlfile.is_open()){
-            throw std::runtime_error("Failed to create journal file:"+PATH);
+            throw std::runtime_error("The vault for your secrets couldn't be created. Maybe today, the Universe doesn't want you journalling"+PATH);
         }
     }
 }

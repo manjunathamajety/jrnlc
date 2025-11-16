@@ -19,9 +19,6 @@ manager::manager(std::string PATH){
         
     }
     file.close();
-    //clearing the file of all entries, so as to prevent duplication while saving
-    std::ofstream clearfile(PATH,std::ios::out|std::ios::trunc); 
-    clearfile.close();
     if(jrnl_manager.empty()){
         id_count=0;
     }
@@ -35,57 +32,59 @@ void manager::addentry(std::string txt,std::string tag){
 }
 
 
-void manager::display(std::string range){
-    
-    int start, end;
-    //manual parsing logic to set start and end based upon the request
-    if(range.length()>2){
-        
-    }
-    else if(range.length()==1){
-            //function to print the entire journal 
-        if(range=="*"){
-            start=0;
-            end=jrnl_manager.size();
-        }
-        else{
-            start=std::stoi(range)-1;
-            end=start+1;
-        }
-    }
-    else if(range.length()==2){
-        if(range[0]=='*'){
-            start=0;
-            end=std::stoi(range.substr(1,range.size()));
-        }
-        else if(range[1]=='*'){
-            start=jrnl_manager.size()-std::stoi(range.substr(0,range.size()-1));
-            end=jrnl_manager.size();
-        }
-    }
-    
-    for(int i=start;i<end;i++){
-        //each iteration of loop loads the corresponding jrnl_manager element into a temporary variable for display 
-        int id=jrnl_manager[i].getid();
-        std::string tag=jrnl_manager[i].gettag();
-        time_t timestamp=jrnl_manager[i].getstamp();
-        std::string txt=jrnl_manager[i].getentry();
-        //Printing each entry with formatting 
-        std::cout<<GREEN<<id<<RESET<<" "<<tag<<" "<<GREEN<<timeconvert(timestamp)<<RESET<<" "<<txt<<"\n";
-    }
-
-}
 
 void manager::save(std::string PATH){
-    
-    std::ofstream savefile(PATH,std::ios::app);
-        //Loop uses jrnl_manager size as a limiting condition    
-        for(int i=0;i<jrnl_manager.size();i++){
-            jrnl& entry=jrnl_manager[i];
-            savefile<<entry.getid()<<";"<<entry.gettag()<<";"<<entry.getstamp()<<";"<<entry.getentry()<<"\n";
-
+    //Using POSIX functions to implement atomic saves. 
+    std::string temp_path=PATH+".tmp";
+    int file=open(temp_path.c_str(), O_WRONLY | O_CREAT | O_TRUNC,0644);
+    if(file==-1){
+        int e=errno;
+        std::cerr<<"Failed to open tmp file "<<std::strerror(e)<<"(errorno: "<<e<<")";
+        return;
     }    
-    
-    savefile.close();
+    for(int i=0;i<jrnl_manager.size();i++){
+        jrnl& entry=jrnl_manager[i];
+        std::string write_entry=std::to_string(entry.getid())+";"+entry.gettag()+";"+std::to_string(entry.getstamp())+";"+entry.getentry()+"\n";
+        ::write(file,write_entry.data(),write_entry.size());
+    }
+    //perfo
+    int sy = ::fsync(file);
+    if(sy == -1){
+        int e=errno;
+        std::cerr<<"Failed to fsync the tmp file "<<std::strerror(e)<<"(errorno: "<<e<<")";
+        return;
+    }
+    int cl = ::close(file);
+    if(cl == -1){
+        int e=errno;
+        std::cerr<<"Failed to close tmp file "<<std::strerror(e)<<"(errorno: "<<e<<")";
+        return;
+    }   
+    int rn = ::rename(temp_path.c_str(),PATH.c_str());
+    if(rn ==-1){
+        int e=errno;
+        std::cerr<<"Failed to rename tmp file "<<std::strerror(e)<<"(errorno: "<<e<<")";
+        return;
+    }
 
+    //fsync the parent directory for extra verification;
+    std::filesystem::path parent_dir=std::filesystem::path(PATH).parent_path();
+    int dir=open(parent_dir.c_str(), O_RDONLY | O_DIRECTORY);
+    if(dir == -1){
+        int e=errno;
+        std::cerr<<"Failed to open the parent directory "<<std::strerror(e)<<"(errorno: "<<e<<")";
+        return;
+    } 
+    int dir_sy = ::fsync(dir);
+    //directory fsync is not a huge criteria, so failure in doing so will only log the error.
+    if(dir_sy==-1){
+        int e=errno;
+        std::cerr<<"Failed to fsync the parent directory "<<std::strerror(e)<<"(errorno: "<<e<<")";
+    }
+    int dir_cl = ::close(dir);
+    if(dir_cl == -1){
+        int e=errno;
+        std::cerr<<"Failed to close the parent directory "<<std::strerror(e)<<"(errorno: "<<e<<")";
+        return;
+    }
 }

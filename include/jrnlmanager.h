@@ -6,6 +6,12 @@
 #include <vector>
 #include <journal.h>
 #include <timestamp.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <cerrno>
+#include <cstring>
+#include <filesystem>
 
 #ifndef JRNLMANAGER_H
 #define JRNLMANAGER_H
@@ -30,7 +36,7 @@ class manager{
     manager(std::string PATH);
     void addentry(std::string txt,std::string tag="jrnl");
     void save(std::string PATH);
-    void display(std::string range);
+    void show(std::string range);
     int getid_count(){return id_count;}
 };
 
