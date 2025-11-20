@@ -3,6 +3,8 @@
 #include <jrnlmanager.h>
 #include <config.h>
 #include <parse.h>
+#include <help.h>
+
 int main(int argc,char** argv){
         std::string arg=argv[1];
     

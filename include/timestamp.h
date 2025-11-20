@@ -8,7 +8,7 @@
 #ifndef TIMESTAMP_H
 #define TIMESTAMP_H
 
-std::int64_t timestamp();
+std::time_t timestamp();
 
 std::string timeconvert(time_t timestamp);
 

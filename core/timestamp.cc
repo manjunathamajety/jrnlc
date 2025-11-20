@@ -1,6 +1,6 @@
 #include <timestamp.h>
 
-std::int64_t timestamp(){
+std::time_t timestamp(){
 
     time_t now;
     std::time(&now);

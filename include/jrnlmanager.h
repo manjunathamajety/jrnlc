@@ -37,6 +37,7 @@ class manager{
     void addentry(std::string txt,std::string tag="jrnl");
     void save(std::string PATH);
     void show(std::string range);
+    void backup(std::string PATH);
     int getid_count(){return id_count;}
 };
 

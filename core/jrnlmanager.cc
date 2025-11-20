@@ -3,7 +3,14 @@
 manager::manager(std::string PATH){
     
     std::ifstream file(PATH);
+    //checking if file is open
+    if(!file.is_open()){
+        std::cerr<<"Couldn't open the jrnl file: "<<PATH<<" for reading, dude lets start empty";
+        id_count=0;
+        return;
+    }
     //Initializes jrnl-objects in the jrnl_manager vector.
+    int line_no=0;
     std::string id,tag,stamp,txt;
     //while loops checks for if the entry can be compleltely scanned
     while (
@@ -11,11 +18,32 @@ manager::manager(std::string PATH){
         std::getline(file,tag,';')&&
         std::getline(file,stamp,';')&&
         std::getline(file,txt)){
-                
-        long long times=std::stoll(stamp);
-        time_t t=static_cast<time_t>(times);
-        //pushes the entry to the last of the vector jrnl_manager
-        jrnl_manager.emplace_back(std::stoi(id),tag,t,txt);
+        ++line_no;
+        if(id.empty() || tag.empty() || stamp.empty() || txt.empty()){
+            std::cerr<<"Corrupted entry: "<<PATH<<":"<<line_no<<": skipping this entry \n";
+            continue;
+        }
+        
+        try{
+            int entry_id=std::stoi(id);
+            long long times=std::stoll(stamp);
+
+            if(entry_id <= 0 || times <= 0){
+                std::cerr<<"Jrnl: "<<PATH<<":"<<line_no<<"Invalid ID/Timestamp,skipping \n"<<
+                    "Don't tell me you edited the jrnl yourself -_-";
+                continue;
+            }
+
+            //pushes to the vector
+            time_t t = static_cast<time_t>(times);
+            jrnl_manager.emplace_back(entry_id,tag,t,txt);
+
+        }   
+        catch(const std::exception& e){
+            std::cerr<<"Jrnl: "<<PATH<<":"<<line_no<<"corrupted entry ("<<e.what()<<"), skipping\n";
+            continue;
+
+        }
         
     }
     file.close();
@@ -40,9 +68,6 @@ bool write_entry(int fd, std::string entry){
         }
         else if(bytes_written == -1){
             return false;
-        }
-        else if(bytes_written == entry_size){
-            return true;
         }
         else{
             while(bytes_written != entry_size){
