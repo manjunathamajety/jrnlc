@@ -57,6 +57,7 @@ manager::manager(std::string PATH){
 
 void manager::addentry(std::string txt,std::string tag){
     jrnl_manager.emplace_back(id_count+1,tag,timestamp(),txt);
+    id_count++;
 }
 
 

@@ -15,10 +15,7 @@ void manager::show(std::string range){
 
     int start, end;
     //manual parsing logic to set start and end based upon the request
-    if(range.length()>2){
-
-    }
-    else if(range.length()==1){
+    if(range.length()==1){
             //function to print the entire journal
         if(range=="*"){
             start=0;
@@ -29,7 +26,7 @@ void manager::show(std::string range){
             end=start+1;
         }
     }
-    else if(range.length()==2){
+    else if(range.length() >= 2){
         if(range[0]=='*'){
             start=0;
             end=std::stoi(range.substr(1,range.size()));
