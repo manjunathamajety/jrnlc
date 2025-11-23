@@ -12,6 +12,7 @@
 #include <cerrno>
 #include <cstring>
 #include <filesystem>
+#include <iomanip>
 
 #ifndef JRNLMANAGER_H
 #define JRNLMANAGER_H

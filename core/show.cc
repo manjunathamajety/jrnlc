@@ -1,5 +1,15 @@
 #include <jrnlmanager.h>
 
+int lastid_digits(int num){
+    if (num == 0){return 1;}
+    int count = 0;
+    while(num){
+        num /= 10;
+        count++;
+    }
+    return count;
+}
+
 
 void manager::show(std::string range){
 
@@ -29,7 +39,7 @@ void manager::show(std::string range){
             end=jrnl_manager.size();
         }
     }
-
+    int width = lastid_digits(jrnl_manager.back().getid());
     for(int i=start;i<end;i++){
         //each iteration of loop loads the corresponding jrnl_manager element into a temporary variable for display
         int id=jrnl_manager[i].getid();
@@ -37,7 +47,8 @@ void manager::show(std::string range){
         time_t timestamp=jrnl_manager[i].getstamp();
         std::string txt=jrnl_manager[i].getentry();
         //Printing each entry with formatting
-        std::cout<<GREEN<<id<<RESET<<" "<<tag<<" "<<GREEN<<timeconvert(timestamp)<<RESET<<" "<<txt<<"\n";
+        std::cout<<GREEN<<std::setw(width)<<std::setfill('0')<<id<<RESET<<" ";
+        std::cout<<tag<<" "<<GREEN<<timeconvert(timestamp)<<RESET<<" "<<txt<<"\n";
     }
 
 }
