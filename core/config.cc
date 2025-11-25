@@ -8,29 +8,35 @@ config::config(){
     const char* xdg_config=std::getenv("XDG_CONFIG_HOME");
     const char* xdg_data=std::getenv("XDG_DATA_HOME");
 
-    //if XDG_CONFIG_HOME is not set, falling back to env HOME/.config
-    if(xdg_config == NULL){
-        config_path = std::string(home)+"/.config/jrnl/jrnl.txt";
+    if(xdg_config == nullptr && home == nullptr){
+        //bailing out if there's no home
+        throw std::runtime_error("jrnl: Mate, your system is so weird, it's HOME-less");
     }
-    else{
+    else if( xdg_config != nullptr){
+        //if xdg_config is set, using it
         config_path=std::string(xdg_config)+"/jrnl/jrnl.txt";
+    }
+    else {    
+        //using home if xdg_config isn't set up
+        config_path = std::string(home)+"/.config/jrnl/jrnl.txt";
     }
 
     //checking if the config directory exists
     std::filesystem::path config_dir = std::filesystem::path(config_path).parent_path();
     if(!std::filesystem::exists(config_dir)){
-        std::cout<<"To tell your journal where you would wanna store your secrets...." <<config_dir<<std::endl;
+        std::cout<<"jrnl: To tell your journal where you would wanna store your secrets...." <<config_dir<<std::endl;
         std::filesystem::create_directories(config_dir);
     }
 
     //creating the file with default values, if it doesn't exist
     if(!std::filesystem::exists(config_path)){
-        std::cout<<"Your journal couldn't find where to store your secrets. Due to the lack of choice, storing it in a default location -_-"<<std::endl;
+        std::cout<<"jrnl: Your journal couldn't find where to store your secrets. Due to the lack of choice, storing it in a default location -_-"
+            <<std::endl;
         std::ofstream outfile(config_path);
         
         std::string data_path;
         if(!outfile.is_open()){
-            throw std::runtime_error("And.... yeah, your journals config file coudn't be opened at "+config_path);
+            throw std::runtime_error("jrnl: And.... yeah, your journals config file coudn't be opened at "+config_path);
         }
         if(xdg_data == NULL){
             data_path=std::string(home)+"/.local/share/jrnl/journal.txt";

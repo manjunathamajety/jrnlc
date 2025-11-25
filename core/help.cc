@@ -25,7 +25,7 @@ void global_help() {
         << "\n"
         << "Examples:\n"
         << "  jrnl add \"met a cat today\" mood\n"
-        << "  echo \"pipe this into the void\" | jrnl add\n"
+        << "  echo \"pipe this into the eternity\" | jrnl add\n"
         << "  jrnl show *\n"
         << "  jrnl show 3\n"
         << "  jrnl show *10\n"
@@ -55,7 +55,7 @@ void add_help() {
         << "  echo \"this came from a pipe\" | jrnl add\n"
         << "\n"
         << "jrnl will make sure the journal file and directories exist.\n"
-        << "If the universe refuses to cooperate, it will loudly complain.\n";
+        << "If the universe refuses to cooperate, it will loudly complain and hopefully, not break :)\n";
 }
 
 
@@ -85,7 +85,7 @@ void show_help() {
         << "  - timestamp\n"
         << "  - the text you wrote\n"
         << "\n"
-        << "If you edited the jrnl file by hand and broke something,\n"
-        << "jrnl will try to skip corrupted entries and bail out on you.\n";
+        << "If you edit the jrnl file by hand and break something,\n"
+        << "jrnl will try and skip entries and bail out on you.\n";
 }
 

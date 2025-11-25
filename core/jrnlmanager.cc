@@ -47,6 +47,7 @@ manager::manager(std::string PATH){
         
     }
     file.close();
+    
     if(jrnl_manager.empty()){
         id_count=0;
     }
@@ -60,8 +61,8 @@ void manager::addentry(std::string txt,std::string tag){
     id_count++;
 }
 
-
-bool write_all(int fd, std::vector<jrnl> jrnl_manager){
+//passing jrnl_manager by reference 'const &'
+bool write_all(int fd, std::vector<jrnl>& jrnl_manager){
     for(int i=0; i<jrnl_manager.size();i++){
         jrnl& entry=jrnl_manager[i]; 
         std::string entry_string=std::to_string(entry.getid())+";"+entry.gettag()+";"+std::to_string(entry.getstamp())+";"+entry.getentry()+"\n";
@@ -78,7 +79,7 @@ bool write_all(int fd, std::vector<jrnl> jrnl_manager){
             }   
             if(n == 0){
                 int e = errno;
-                std::cerr<<"jrnl: failed to write the entry"<<entry.getid()<<" "<<std::strerror(e)<<"(errno:"<<e<<")\n";
+                std::cerr<<"jrnl: bytes written 0, there's something wrong with the file system"<<entry.getid()<<" "<<std::strerror(e)<<"(errno:"<<e<<")\n";
                 return false;
             }
             else{
@@ -119,13 +120,17 @@ void manager::save(std::string PATH){
         return;
     }   
     //renaming and effectively replacing journal.txt with the comletely written .tmp file
-    int rn = ::rename(temp_path.c_str(),PATH.c_str());
-    if(rn ==-1){
-        int e=errno;
-        std::cerr<<"Failed to rename tmp file "<<std::strerror(e)<<"(errorno: "<<e<<")";
+    if(write_ok == true){
+        int rn = ::rename(temp_path.c_str(),PATH.c_str());
+        if(rn ==-1){
+            int e=errno;
+            std::cerr<<"Failed to rename tmp file "<<std::strerror(e)<<"(errorno: "<<e<<")";
+            return;
+        }
+    }
+    else{
         return;
     }
-
     //fsync the parent directory for extra verification;
     std::filesystem::path parent_dir=std::filesystem::path(PATH).parent_path();
     int dir=open(parent_dir.c_str(), O_RDONLY | O_DIRECTORY);
