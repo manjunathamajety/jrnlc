@@ -69,8 +69,8 @@ void manager::show(std::string range){
         time_t timestamp=jrnl_manager[i].getstamp();
         std::string txt=jrnl_manager[i].getentry();
         //Printing each entry with formatting
-        std::cout<<CYAN<<std::setw(width)<<std::setfill('0')<<id<<RESET<<" ";
-        std::cout<<tag<<" "<<RED<<timeconvert(timestamp)<<RESET<<" "<<txt<<"\n";
+        std::cout<<GREEN<<std::setw(width)<<std::setfill('0')<<id<<RESET<<" ";
+        std::cout<<tag<<" "<<GREEN<<timeconvert(timestamp)<<RESET<<" "<<txt<<"\n";
     }
 
 }

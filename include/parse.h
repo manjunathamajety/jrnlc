@@ -4,6 +4,7 @@
 #include <config.h>
 #include <unistd.h>
 #include <string>
+#include <help.h>
 
 #ifndef PARSE_H
 #define PARSE_H

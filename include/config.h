@@ -4,6 +4,7 @@
 #include <fstream>
 #include <cstdlib>
 #include <stdexcept>
+#include <unordered_map>
 
 #ifndef CONFIG_H
 #define CONFIG_H
