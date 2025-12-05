@@ -56,7 +56,7 @@ Manager::Manager(std::string PATH){
     }
 }
 
-void Manager::add_entry(std::string txt,std::string tag){
+void Manager::addentry(std::string txt,std::string tag){
     jrnl_manager.emplace_back(id_count+1,tag,timestamp(),txt);
     id_count++;
 }

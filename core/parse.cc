@@ -1,11 +1,13 @@
 #include <parse.h>
+#include <time.h>
+#include <jrnlmanager.h>
 
 int add_handle(int argc, char** argv){
     //reading the config file for path
     config c1;
     std::string PATH=c1.getpath();
     //initializing the vector for jrnl entries
-    manager m1(PATH);
+    Manager m1(PATH);
 
     std::string entry;
     std::string tag;
@@ -57,42 +59,62 @@ int display_handle(int argc, char** argv){
     config c1;
     std::string PATH=c1.getpath();
     //initializing the vector of journal entries 
-    manager m1(PATH);
+    Manager m1(PATH);
     std::string display_specifier;
-    // when no argument is passed 
+    struct ShowFlag flags;
+
     if (argc == 0){
-        //stream or pipe, we just print everything :)
-        if(isatty(STDOUT_FILENO)){
-            display_specifier="*";
-            m1.show(display_specifier);
-            m1.save(PATH);
-            return 0;
-
+        flags.range = "*";
+        //flags.mode = !isatty(STDIN_FILENO);
+        if(isatty(STDIN_FILENO)){
+            flags.mode = InputMode::std_in;
         }
-        //piped input 
-        else{
-            display_specifier="*";
-            m1.show(display_specifier);
-            m1.save(PATH);
-            return 0;
-        }
-    }
-    //passing argv
-    else if(argc==1){
-        display_specifier=argv[0];
-        m1.show(display_specifier);
-        m1.save(PATH);
-        return 0;
-    }
-    else{
-        std::cerr<<"jrnl: too many arugments to 'show'\n"
-            <<"Usage: jrnl show [range]\n";
-        return 1;
     } 
-     
-return 1;
-
+    else {
+        flags.mode = InputMode::argv;
+        for(int i = 0; i < argc; i++){
+            std::string arg = argv[i];
+            //checking if any of the flags match with the argv vector
+            //--before flag
+            if(arg == "--before"){
+                std::string time = argv[i+1];
+                flags.before = time_parse(time); 
+                i++;
+            }
+            //--after flag
+            else if(arg == "--after"){
+                std::string time = argv[i+1];
+                flags.after = time_parse(time);
+                i++;
+            }
+            //--color flag -> to force color in show fuction
+            else if(arg == "--color"){
+                flags.color = true;
+            }
+            //--no-color flag -> to force color-free output in show function
+            else if(arg == "--no-color"){
+                flags.color = false;
+            }
+            //check for range, which doesn't follow the flag format
+            //so range SHOULD be the only term accepted which doesn't start with '--'
+            else if(arg.size() < 2 || arg[0] != '-' || arg[1] != '-'){
+                if(flags.range){
+                    std::cerr<<"jrnl: too many arguments for range \n";
+                    return 1;
+                }
+                else{
+                    flags.range = argv[i];
+                }
+            }
+        }
+    }
+    if(!isatty(STDIN_FILENO)){
+        flags.mode = InputMode::pipe;
+    }
+    else {
+        flags.mode = InputMode::std_in;
+    }
+    
+    m1.show(flags);
+    return 0;
 }
-
-
-

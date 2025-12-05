@@ -14,6 +14,7 @@
 #include <filesystem>
 #include <iomanip>
 #include <optional>
+#include <algorithm>
 
 #ifndef JRNLMANAGER_H
 #define JRNLMANAGER_H
@@ -54,7 +55,7 @@ class Manager{
 
     public:
     Manager(std::string PATH);
-    void add_entry(std::string txt,std::string tag="jrnl");
+    void addentry(std::string txt,std::string tag="jrnl");
     void save(std::string PATH);
     void show(const ShowFlag& flags);
     void backup(std::string PATH);
