@@ -12,53 +12,6 @@ int lastid_digits(int num){
 
 void Manager::show(const ShowFlag& flags){
     size_t start = 0, end = jrnl_manager.size();
-    
-    //filter for range flag
-    if(flags.range.has_value()){
-        const std::string st = flags.range.value();
-        size_t filter_start = 0, filter_end = jrnl_manager.size(); 
-        //manual parsing logic to set start and end based upon the request
-        if(st.length()==1){
-            //function to print the entire journal
-            if(st == "*"){
-                //do nothing :)
-            }
-            else{
-                int num;
-                num = std::stoi(st);
-                if(num > jrnl_manager.size() || num <= 0){
-                    throw std::runtime_error("You've got to ask me to show an entry IN the journal, not beyond it -_-");
-                }
-                else{
-                    start = num-1;
-                    end = start+1;
-                }
-            }
-        }
-        else if(st.length() >= 2){
-            if(st[0] == '*'){
-                int num = std::stoi(st.substr(1,st.size()));
-                if(num > jrnl_manager.size() || num < 0){
-                    throw std::runtime_error("Yeah mate, you can't expect me to show beyond what's present in your jrnl -_-, whatever... range-error");
-                }
-                else{
-                    filter_end = num;
-                }
-            }
-            else if(st[st.length()-1] == '*'){
-                int num = std::stoi(st.substr(0,st.size()-1));
-                if( num > jrnl_manager.size() || num < 0){
-                    throw std::runtime_error("I can't show journal entires you haven't created yourself. whatever... range-error");
-                }
-                else{
-                    filter_start = jrnl_manager.size() - num;
-                }
-            }
-        }
-        start = std::max(start, filter_start);
-        end = std::min(end, filter_end);
-    }
-
     //filter for after flag
     if(flags.after){
         //after just affect the start variable
@@ -76,6 +29,49 @@ void Manager::show(const ShowFlag& flags){
         size_t beforeid = it - vec.begin();
             end = std::min(end, beforeid);
     }
+     
+    //filter for range flag
+    if(flags.range.has_value()){
+        const std::string st = flags.range.value();
+        //manual parsing logic to set start and end based upon the request
+            //function to print the entire journal
+        if(st == "*"){
+            //do nothing :)
+        }
+        else if(st[0] != '*' || st[1] != '*'){
+            int num;
+            num = std::stoi(st);
+            if(num > jrnl_manager.size() || num <= 0){
+                throw std::runtime_error("You've got to ask me to show an entry IN the journal, not beyond it -_-");
+            }
+            else{
+                start = num-1;
+                end = num;
+            }
+        }
+        else if(st.length() >= 2){
+            if(st[0] == '*'){
+                int num = std::stoi(st.substr(1,st.size()));
+                if(num > jrnl_manager.size() || num < 0){
+                    throw std::runtime_error("Yeah mate, you can't expect me to show beyond what's present in your jrnl -_-, whatever... range-error");
+                }
+                else{
+                    size_t fnum = num;
+                    end = start + num;
+                }
+            }
+            else if(st[st.length()-1] == '*'){
+                int num = std::stoi(st.substr(0,st.size()-1));
+                if( num > jrnl_manager.size() || num < 0){
+                    throw std::runtime_error("I can't show journal entires you haven't created yourself. whatever... range-error");
+                }
+                else{
+                    size_t fnum = num;
+                    start = end - num;
+                }
+            }
+        }
+    }
 
     //jrnl_manager id width acquisition
     int width;
@@ -85,7 +81,6 @@ void Manager::show(const ShowFlag& flags){
     else{
         width = lastid_digits(jrnl_manager.back().getid());
     }
-        
     for(int i = start; i < end; i++){
             //each iteration of loop loads the corresponding jrnl_manager element into a temporary variable for display
                 int id = jrnl_manager[i].getid();
