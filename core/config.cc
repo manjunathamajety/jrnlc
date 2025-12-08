@@ -1,17 +1,20 @@
 #include <config.h>
 
-const char* gethome(){
-    const char* home = std::getenv("HOME");
-    return home;
-}
-
-void create_parent_dir(std::string path){
+static void check_create_parent_dir(const std::string path){
     std::filesystem::path parent_dir = std::filesystem::path(path).parent_path();
-    if(!std::filesystem::exists(path)){
-        std::cout<<"Creating parent directory at: "<<path<<std::endl;
-        std::filesystem::create_directories(path);
+    if(!std::filesystem::exists(parent_dir)){
+        std::cout<<"Creating parent directory at: "<<parent_dir<<std::endl;
+        std::filesystem::create_directories(parent_dir);
     }
 }
+
+static void check_create_file(const std::string path){
+    std::ofstream out(path);
+    if(!out){
+        throw std::runtime_error("Couldn't create file at" + " "+ path);
+    }
+}
+
 void config::read_config_file(std::string config_path){
     //reading the config file
     std::string line;
@@ -58,7 +61,7 @@ void config::read_config_file(std::string config_path){
 }
 
 
-void default_config_file(std::string config_path, const char* xdg_data){
+void create_default_config(std::string config_path, const char* xdg_data){
     //creating the file with default values, since it doesn't exist
         std::cout<<"Your journal couldn't find where to store your secrets. Due to the lack of choice, storing it in a default location -_-"
             <<std::endl;
@@ -87,44 +90,48 @@ void default_config_file(std::string config_path, const char* xdg_data){
         outfile<<"#Default directory path for storing backups"<<std::endl;
         outfile<<"BACKUP_PATH$" + backup_path<<std::endl;
 }
-
+//constructor initalizing the variables with default paths
 config::config(){
-
-    std::string config_path;
-    //looking for the enviroment paths
-    const char* home = gethome();
-    const char* xdg_config=std::getenv("XDG_CONFIG_HOME");
-    const char* xdg_data=std::getenv("XDG_DATA_HOME");
+    //getting the default environments
+    const char* home = std::getenv("HOME");
+    const char* xdg_config = std::getenv("XDG_CONFIG_HOME");
+    const char* xdg_data = std::getenv("XDG_DATA_HOME");
 
     if(xdg_config == nullptr && home == nullptr){
-        //bailing out if there's no home
+        //bailing out since there's no damned home
         throw std::runtime_error("Mate, your system is so weird, it's HOME-less");
     }
-    else if( xdg_config != nullptr){
-        //if xdg_config is set, using it
+    else if(xdg_config != nullptr){
+        //xdg_config is set, using it
         config_path = std::string(xdg_config)+"/jrnl/jrnl.txt";
     }
-    else {    
-        //using home if xdg_config isn't set up
+    else {
+        //using home if xdg_config isn't set
+        //and it actually has got home
         config_path = std::string(home)+"/.config/jrnl/jrnl.txt";
     }
+    //chekcing for if the directories exist and creating the file if it doesn't exist
+    check_create_parent_dir(config_path);
+    check_create_file(config_path);
 
-    //checking if the config directory exists
-    create_parent_dir(config_path);
-
-    if(!std::filesystem::exists(config_path)){
-        default_config_file(config_path, xdg_data);
+    if(xdg_data == nullptr && home == nullptr){
+        //bailing out since there's no damned xdg_data_home and home
+        throw std::runtime_error("No way your system has no HOME AND XDG_DATA_HOME set man, I ain't god to work under such work conditions");
     }
-    //reading and assinging class variables from config  file
-    read_config_file(config_path);
-    //checking if the journal target directory exists, creating it not
-    create_parent_dir(PATH);
-
-    //creating journal file if it doesn't exist
-    if(!std::filesystem::exists(PATH)){
-        std::ofstream jrnlfile(PATH);
-        if(!jrnlfile.is_open()){
-            throw std::runtime_error("The vault for your secrets couldn't be created. Maybe today, the Universe doesn't want you journalling"+PATH);
-        }
+    else if(xdg_data != nullptr){
+        //using xdg_data for default path location for jrnl file
+        PATH = std::string(xdg_data)+"/jrnl/journal.txt";
+        BACKUP_PATH = std::string(xdg_data)+"/jrnl/backup";
     }
+    else{
+        //working with home
+        PATH = std::string(home)+"/.local/share/jrnl/journal.txt";
+        BACKUP_PATH = std::string(home)+"/.local/share/jrnl/backup";
+    }
+    check_create_parent_dir(PATH);
+    check_create_parent_dir(BACKUP_PATH);
+    check_create_file(PATH);
 }
+
+//method to check 
+
