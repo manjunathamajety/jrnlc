@@ -8,10 +8,11 @@ int add_handle(int argc, char** argv){
     config c1;
     c1.initialization();
     c1.parseconfig();
-    std::string PATH = c1.getpath();
+    std::string PATH = c1.get_path();
+    std::string BACKUP_PATH = c1.get_backup();
     //initializing the vector for jrnl entries
-    Manager m1(PATH);
-
+    Manager m1(PATH,BACKUP_PATH);
+    m1.loadentry(PATH);
     std::string entry;
     std::string tag;
     //condition when there's no input in argv
@@ -62,10 +63,12 @@ int display_handle(int argc, char** argv){
     config c1;
     c1.initialization();
     c1.parseconfig();
-    const ColorTemplate& colors = c1.getcolors(); 
-    std::string PATH=c1.getpath();
+    const ColorTemplate& colors = c1.get_colors(); 
+    std::string PATH = c1.get_path();
+    std::string BACKUP_PATH = c1.get_backup();
     //initializing the vector of journal entries 
-    Manager m1(PATH);
+    Manager m1(PATH, BACKUP_PATH);
+    m1.loadentry(PATH);
     std::string display_specifier;
     struct ShowFlag flags;
 

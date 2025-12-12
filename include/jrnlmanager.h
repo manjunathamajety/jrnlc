@@ -20,16 +20,6 @@
 #ifndef JRNLMANAGER_H
 #define JRNLMANAGER_H
 
-#define BLACK   "\x1b[30m"
-#define RED     "\x1b[31m"
-#define GREEN   "\x1b[32m"
-#define YELLOW  "\x1b[33m"
-#define BLUE    "\x1b[34m"
-#define MAGENTA "\x1b[35m"
-#define CYAN    "\x1b[36m"
-#define WHITE   "\x1b[37m"
-#define RESET   "\x1b[0m"
-
 enum class InputMode{
     argv,
     pipe,
@@ -56,12 +46,14 @@ class Manager{
     size_t tag_size;
 
     public:
-    Manager(std::string PATH);
+    Manager(std::string PATH, std::string BACKUP_PATH);
+    void loadentry(std::string PATH);
     void addentry(std::string txt,std::string tag="jrnl");
     void save(std::string PATH);
     void show(const ShowFlag& flags,const ColorTemplate& colors);
     void backup(std::string PATH);
     int getid_count(){return id_count;}
+
 };
 
 #endif

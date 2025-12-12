@@ -1,7 +1,42 @@
 #include <jrnlmanager.h>
 
-Manager::Manager(std::string PATH){
+static bool check_dir(const std::string& path){
+    std::filesystem::path parent_dir = std::filesystem::path(path).parent_path();
+    if(!std::filesystem::exists(parent_dir)){
+        std::cout<<"Creating parent directory at: "<<parent_dir<<std::endl;
+        bool created = std::filesystem::create_directories(parent_dir);
+        if(created == false){
+            std::cerr<<"Couldn't create parent directories at: "<<parent_dir<<std::endl;
+            return false;
+        }
+        return true;
+    }
+    return true;
+}
+
+static bool check_file(std::string& path){
+    std::ofstream out(path, std::ios::app);
+    if(!out){
+        std::cerr<<"Couldn't create file at path: "<<path<<std::endl;
+        return false;
+    }
+    return true;
+}
+
+Manager::Manager(std::string PATH, std::string BACKUP_PATH){
+    bool path_dir_check = check_dir(PATH);
+    if(path_dir_check == false){
+        throw std::runtime_error("Aborted");
+    }
+    bool path_file = check_file(PATH);
+    if(path_file == false){
+        throw std::runtime_error("Aborted");
+    }
     
+    bool backup_check = check_dir(BACKUP_PATH);
+}
+
+void Manager::loadentry(std::string PATH){    
     std::ifstream file(PATH);
     //checking if file is open
     if(!file.is_open()){
@@ -61,6 +96,7 @@ Manager::Manager(std::string PATH){
     }
 }
 
+
 void Manager::addentry(std::string txt,std::string tag){
     jrnl_manager.emplace_back(id_count+1,tag,timestamp(),txt);
     id_count++;
@@ -102,7 +138,7 @@ void Manager::save(std::string PATH){
     bool write_ok;
     //Using POSIX functions to implement atomic saves. 
     std::string temp_path=PATH+".tmp";
-    int file=open(temp_path.c_str(), O_WRONLY | O_CREAT | O_TRUNC,0644);
+    int file = open(temp_path.c_str(), O_WRONLY | O_CREAT | O_TRUNC,0644);
     if(file==-1){
         int e=errno;
         std::cerr<<"Failed to open tmp file "<<std::strerror(e)<<"(errorno: "<<e<<")";

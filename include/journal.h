@@ -24,9 +24,9 @@ class jrnl{
         //Move is used to avoid the overheads involved in copying, instead transfers the string.
         jrnl (size_t i, std::string t, time_t stamp,std::string txt) : id(i), tag(std::move(t)), timestamp(stamp), text(std::move(txt)){};
         
-        size_t getid(){return id;}
+        size_t getid()const{return id;}
         std::string gettag(){return tag;}
-        time_t getstamp(){return timestamp;}
+        time_t getstamp()const{return timestamp;}
         std::string getentry(){return text;}
         
 

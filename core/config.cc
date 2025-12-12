@@ -1,20 +1,32 @@
 #include <config.h>
 
-//helper to create parent_directories
-static void check_create_parent_dir(const std::string& path){
-    std::filesystem::path parent_dir = std::filesystem::path(path).parent_path();
-    if(!std::filesystem::exists(parent_dir)){
-        std::cout<<"Creating parent directory at: "<<parent_dir<<std::endl;
-        std::filesystem::create_directories(parent_dir);
-    }
+static bool check_ansi(const std::string& ansi_code){
+    int color = std::stoi(ansi_code);
+        if(color > 255 || color < 0){
+            return false;
+        }
+        else {
+            return true;
+        }
 }
 
-//helper to create files
-static void check_create_file(const std::string& path){
-    std::ofstream out(path,std::ios::app);
-    if(!out){
-        throw std::runtime_error(std::string("Couldn't create file at ") + path);
+static bool check_create_parent_dir(std::string path){
+    std::filesystem::path parent_dir = std::filesystem::path(path).parent_path();
+    if(!std::filesystem::exists(parent_dir)){
+        std::cout<<"Create directory at: "<<parent_dir<<std::endl;
+        bool dir_create = std::filesystem::create_directories(parent_dir);
+        if(dir_create == false){
+            std::cerr<<"Couldn't create directory at: "<<parent_dir<<std::endl;
+            return false;
+        }
     }
+    std::ofstream out(path, std::ios::app);
+    if(!out){
+        std::cout<<"Couldn't create file at path: "<<path<<std::endl;
+        return false;
+    }
+    return true;
+
 }
 
 config::config(){
@@ -37,8 +49,11 @@ config::config(){
         config_path = std::string(home)+"/.config/jrnl/jrnl.txt";
     }
     //chekcing for if the directories exist and creating the file if it doesn't exist
-    check_create_parent_dir(config_path);
+    bool file_check = check_create_parent_dir(config_path);
+    if(file_check == false){
+        throw std::runtime_error("Mate, coudln't even access your config directory, something is wrong with your filesystems bruh");
 
+    }
     if(xdg_data == nullptr && home == nullptr){
         //bailing out since there's no damned xdg_data_home and home
         throw std::runtime_error("No way your system has no HOME AND XDG_DATA_HOME set man, I ain't god to work under such work conditions");
@@ -53,9 +68,6 @@ config::config(){
         PATH = std::string(home)+"/.local/share/jrnl/journal.txt";
         BACKUP_PATH = std::string(home)+"/.local/share/jrnl/backup";
     }
-    check_create_parent_dir(PATH);
-    check_create_parent_dir(BACKUP_PATH+"/dummy.txt");
-    check_create_file(PATH);
 }
 
 //method to check 
@@ -113,17 +125,26 @@ void config::parseconfig(){
             BACKUP_PATH = value;
         }
         else if(key == "Id"){
-            colors.id_color = value;
+            if(check_ansi(value)){
+                colors.id_color = value;
+            }
         }
         else if(key == "Tag"){
-            colors.tag_color = value;
+            if(check_ansi(value)){
+                colors.tag_color = value;
+            }
         }
         else if(key == "Time"){
-            colors.timestamp_color = value;
+            if(check_ansi(value)){    
+                colors.timestamp_color = value;
+            }
         }
         else if(key == "Text"){
-            colors.text_color = value;
+            if(check_ansi(value)){
+                colors.text_color = value;
+            }
         }
     }
-
 }
+
+

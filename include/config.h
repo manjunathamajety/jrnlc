@@ -26,11 +26,11 @@ class config{
 
     public:
         config();
-        std::string getpath(){return PATH;}
-        std::string getbackup(){return BACKUP_PATH;} 
+        std::string get_path(){return PATH;}
+        std::string get_backup(){return BACKUP_PATH;} 
         void initialization();
         void parseconfig();
-        const ColorTemplate& getcolors(){return colors;}
+        const ColorTemplate& get_colors(){return colors;}
 };
 
 #endif 

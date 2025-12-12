@@ -39,7 +39,7 @@ void Manager::show(const ShowFlag& flags, const ColorTemplate& colors){
         if(st == "*"){
             //do nothing :)
         }
-        else if(st[0] != '*' || st[1] != '*'){
+        else if(st[0] != '*' || st[st.length()-1] != '*'){
             int num;
             num = std::stoi(st);
             if(num > jrnl_manager.size() || num <= 0){
@@ -52,8 +52,8 @@ void Manager::show(const ShowFlag& flags, const ColorTemplate& colors){
         }
         else if(st.length() >= 2){
             if(st[0] == '*'){
-                int num = std::stoi(st.substr(1,st.size()));
-                if(num > jrnl_manager.size() || num < 0){
+                int num = std::stoi(st.substr(1,st.size()-1));
+                if(num > jrnl_manager.size() || num <= 0){
                     throw std::runtime_error("Yeah mate, you can't expect me to show beyond what's present in your jrnl -_-, whatever... range-error");
                 }
                 else{
@@ -63,7 +63,7 @@ void Manager::show(const ShowFlag& flags, const ColorTemplate& colors){
             }
             else if(st[st.length()-1] == '*'){
                 int num = std::stoi(st.substr(0,st.size()-1));
-                if( num > jrnl_manager.size() || num < 0){
+                if( num > jrnl_manager.size() || num <= 0){
                     throw std::runtime_error("I can't show journal entires you haven't created yourself. whatever... range-error");
                 }
                 else{
@@ -75,7 +75,7 @@ void Manager::show(const ShowFlag& flags, const ColorTemplate& colors){
     }
     std::string id_color,tag_color,time_color,text_color;
     std::string reset = "\x1b[0m";
-    if(flags.color){
+    if(flags.color == true){
     
         id_color   = std::string("\x1b[") + colors.id_color + "m";
         tag_color  = std::string("\x1b[") + colors.tag_color + "m";
@@ -105,7 +105,7 @@ void Manager::show(const ShowFlag& flags, const ColorTemplate& colors){
                 time_t timestamp = jrnl_manager[i].getstamp();
                 std::string txt = jrnl_manager[i].getentry();            
             //Printing each entry with formatting
-                std::cout<<id_color<<std::setw(width)<<std::setfill('0')<<id<<reset<<" ";
+                std::cout<<id_color<<std::right<<std::setw(width)<<std::setfill('0')<<id<<reset<<" ";
                 std::cout<<tag_color<<std::left<<std::setw(tag_size)<<std::setfill(' ')<<tag<<reset<<" ";
                 std::cout<<time_color<<timeconvert(timestamp)<<reset<<" "<<text_color<<txt<<reset<<"\n";
     }
