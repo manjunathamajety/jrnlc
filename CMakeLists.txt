@@ -10,3 +10,7 @@ add_executable(jrnl src/main.cc core/timestamp.cc core/backup.cc core/parse.cc c
 target_include_directories(jrnl PRIVATE include )
 
 install(TARGETS jrnl RUNTIME DESTINATION bin)
+
+install(FILES man-pages/jrnl.1 DESTINATION share/man/man1)
+
+install(FILES LICENSE DESTINATION share/licenses/jrnl)
