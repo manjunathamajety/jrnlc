@@ -34,7 +34,8 @@ jrnl show 5* #displays last 5 entries
 jrnl show --after "2025-01-01 10:00"
 jrnl show --before "2025-01-10 18:30"
 jrnl show --after "2025-01-10 00:00" --before "2025-02-10 00:00"
-```
+jrnl show | grep "new-year" #can be composed for more search options
+
 Both range based and time based filters can be composed with one another. 
 
 ```sh
@@ -43,6 +44,11 @@ jrnl show --after "2025-01-01 10:00" "5*"
 
 jrnl show --before "2025-01-10 18:30" "*9"
 jrnl show --before "2025-01-10 18:30" "9*"
+```
+Backup can be generated as follows;
+```sh
+jrnl backup #autogenerates backup's name with current timestamp
+jrnl backup "backup@newyear" #custom backup name
 ```
 
 ## Storage Format
@@ -79,7 +85,9 @@ The configuration file allows customization of:
 Example configuration:
 ```sh
 PATH$/home/user/.local/share/jrnl/journal.txt
+
 BACKUP_PATH$/home/user/.local/share/jrnl/backup
+
 Id$32
 Tag$34
 Time$32
@@ -124,14 +132,6 @@ sudo make install
 
 The tool assumes it is the sole writer of the journal file.
 Concurrent writes or external modification are not supported.
-
-
-## Status
-
-This is a personal project developed for learning and daily use.
-
-The interface may change and some edge cases may still need polishing.
-Bug reports and feedback are welcome, but backward compatibility is not guaranteed.
 
 ## Non-goals
 
