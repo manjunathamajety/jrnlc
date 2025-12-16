@@ -72,7 +72,18 @@ config::config(){
 
 //method to check 
 void config::initialization(){
-    if (!std::filesystem::exists(config_path)){
+    bool write_defaults = false;
+
+    if (!std::filesystem::exists(config_path)) {
+        write_defaults = true;
+    } else {
+        std::ifstream file(config_path);
+        if (file.peek() == std::ifstream::traits_type::eof()) {
+            write_defaults = true; 
+        }
+    }
+    
+    if (write_defaults){
         std::ofstream outfile(config_path);
         if(!outfile){
             throw std::runtime_error(std::string("Coudn't create file at location ") + config_path);
