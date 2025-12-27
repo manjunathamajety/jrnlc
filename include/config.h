@@ -22,15 +22,20 @@ class config{
         std::string config_path;
         std::string PATH;
         std::string BACKUP_PATH;
+        std::optional<std::string> local_path;
+        std::optional<std::string> local_backup;
         ColorTemplate colors;
 
     public:
         config();
-        std::string get_path(){return PATH;}
-        std::string get_backup(){return BACKUP_PATH;} 
-        void initialization();
+        std::string get_path(){ if(local_path){return local_path;} else{return PATH;}}
+        std::string get_backup(){ if(local_backup){return local_backup;} else{return BACKUP_PATH;}} 
+
+        void global_init();
         void parseconfig();
+        void local_init();
         const ColorTemplate& get_colors(){return colors;}
+        
 };
 
 #endif 

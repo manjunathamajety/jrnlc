@@ -1,14 +1,14 @@
-.TH JRNL 1 "2025-03-15" "jrnl 3.0.0" "User Commands"
+.TH JRNLC 1 "2025-03-15" "jrnl 3.0.0" "User Commands"
 
 .SH NAME
-jrnl \- minimal CLI journaling tool
+jrnlc \- minimal CLI journaling tool
 
 .SH SYNOPSIS
-.B jrnl
+.B jrnlc
 .RI [ operation ] " [entry/specifier]"
 
 .SH DESCRIPTION
-jrnl is a small command-line journaling tool that stores
+jrnlc is a small command-line journaling tool that stores
 journal entries in a plain-text format and provides simple
 filtering based on time and ranges.
 
@@ -52,19 +52,19 @@ Show version information and exit.
 
 .SH FILES
 .TP
-.I $XDG_DATA_HOME/jrnl/backup
+.I $XDG_DATA_HOME/jrnlc/backup
 Default backup directory.
 
 .TP
-.I $XDG_DATA_HOME/jrnl/journal.txt
+.I $XDG_DATA_HOME/jrnlc/journal.txt
 Default journal storage file.
 
 .TP
-.I $XDG_CONFIG_HOME/jrnl/config
+.I $XDG_CONFIG_HOME/jrnlc/config
 Configuration file.
 
 .SH NOTES
-jrnl is intentionally minimal. Each invocation performs a
+jrnlc is intentionally minimal. Each invocation performs a
 single operation, following traditional Unix command-line
 tool design. Journal data is stored in plain text and is
 safe to inspect or process using standard Unix utilities.
@@ -77,17 +77,17 @@ journal states.
 .SH EXAMPLES
 Add a new entry:
 .RS
-jrnl add "Finished N-body simulation draft"
+jrnlc add "Finished N-body simulation draft"
 .RE
 
 Show the last 3 entries:
 .RS
-jrnl show 3*
+jrnlc show 3*
 .RE
 
 Create a backup:
 .RS
-jrnl backup
+jrnlc backup
 .RE
 
 .SH AUTHOR

@@ -26,7 +26,6 @@ static bool check_create_parent_dir(std::string path){
         return false;
     }
     return true;
-
 }
 
 config::config(){
@@ -41,18 +40,12 @@ config::config(){
     }
     else if(xdg_config != nullptr){
         //xdg_config is set, using it
-        config_path = std::string(xdg_config)+"/jrnl/jrnl.txt";
+        config_path = std::string(xdg_config)+"/jrnlc/jrnl.txt";
     }
     else {
         //using home if xdg_config isn't set
         //and it actually has got home
-        config_path = std::string(home)+"/.config/jrnl/jrnl.txt";
-    }
-    //chekcing for if the directories exist and creating the file if it doesn't exist
-    bool file_check = check_create_parent_dir(config_path);
-    if(file_check == false){
-        throw std::runtime_error("Mate, coudln't even access your config directory, something is wrong with your filesystems bruh");
-
+        config_path = std::string(home)+"/.config/jrnlc/jrnl.txt";
     }
     if(xdg_data == nullptr && home == nullptr){
         //bailing out since there's no damned xdg_data_home and home
@@ -60,23 +53,26 @@ config::config(){
     }
     else if(xdg_data != nullptr){
         //using xdg_data for default path location for jrnl file
-        PATH = std::string(xdg_data)+"/jrnl/journal.txt";
-        BACKUP_PATH = std::string(xdg_data)+"/jrnl/backup";
+        PATH = std::string(xdg_data)+"/jrnlc/journal.txt";
+        BACKUP_PATH = std::string(xdg_data)+"/jrnlc/backup";
     }
     else{
         //working with home
-        PATH = std::string(home)+"/.local/share/jrnl/journal.txt";
-        BACKUP_PATH = std::string(home)+"/.local/share/jrnl/backup";
+        PATH = std::string(home)+"/.local/share/jrnlc/journal.txt";
+        BACKUP_PATH = std::string(home)+"/.local/share/jrnlc/backup";
     }
+
 }
 
-//method to check 
-void config::initialization(){
+//this just initializes a global jrnl when called upon
+void config::global_init(){
     bool write_defaults = false;
-
-    if (!std::filesystem::exists(config_path)) {
-        write_defaults = true;
-    } else {
+    //chekcing for if the directories exist and creating the file if it doesn't exist
+    bool file_check = check_create_parent_dir(config_path);
+    if(file_check == false){
+        throw std::runtime_error("Mate, coudln't create config for global jrnl, something is wrong with your filesystems bruh");
+    }
+    else {
         std::ifstream file(config_path);
         if (file.peek() == std::ifstream::traits_type::eof()) {
             write_defaults = true; 
@@ -99,13 +95,13 @@ void config::initialization(){
             outfile<<"Time$"<<"32"<<"\n";
             outfile<<"Text$"<<"37"<<"\n";
             outfile.close();
+            std::cout<<"Global config created at path: "<<config_path<<std::endl;
         }
     }
 }
 
 
 void config::parseconfig(){
-    
     //reading the config file
     std::string line;
     std::ifstream file(config_path); 
@@ -155,6 +151,37 @@ void config::parseconfig(){
                 colors.text_color = value;
             }
         }
+    }
+}
+
+//this just initializes a local jrnl when called upon
+void config::local_init(){
+    std::filesystem::path cwd = std::filesystem::current_path();
+    std::string local_jrnl_test = std::string(cwd)+"/.jrnlc/jrnl.txt";
+    std::string local_backup_test = std::string(cwd)+"/.jrnlc/backup";
+    bool file_check = check_create_parent_dir(local_jrnl_test);
+    if(file_check == false){
+        throw std::runtime_error("Mate, coudln't create local jrnl");
+    }
+    else{
+        std::cout<<"Local jrnl created at path: "<<local_jrnl;
+        local_path = local_test;
+        local_backup = local_backup_test;
+    }
+}
+
+void config::resolve_local_or_global(bool is_local){
+    if(is_local == true){    
+        std::filesystem::path cwd =  std::filesystem::current_path();
+        std::string local_jrnl_test = std::string(cwd)+"/.jrnlc/jrnl.txt";
+        std::string local_backup_test = std::string(cwd)+"/.jrnlc/backup";
+
+        local_path = local_jrnl_test;
+        local_backup = local_backup_test;
+        if(!std::filesystem::exists(local_path))
+    }
+    else{
+        //do nothing i.e don't set the local_path variable
     }
 }
 
