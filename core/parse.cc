@@ -4,8 +4,26 @@
 #include <config.h>
 
 void init_handle(int argc, char** argv){
-    
-
+    if(argc == 0){
+        throw std::runtime_error("jrnlc: init - invalid usage \n Usage jrnlc init [--global/--local]");
+    }    
+    else if(argc > 1){ 
+        throw std::runtime_error("jrnlc: init - too many arguments \n Usage jrnlc init [--global/--local]");
+    }
+    else{
+        std::string flag = argv[0];
+        if(flag == "--global"){
+            config c1;
+            c1.global_init();
+        }
+        if(flag == "--local"){
+            config c1;
+            c1.local_init();
+        }
+        else{
+            throw std::runtime_error("jrnlc: init - invalid flag \n Usage jrnlc init [--global/--local]");
+        }
+    }
 
 
 }
@@ -13,7 +31,6 @@ void init_handle(int argc, char** argv){
 void add_handle(int argc, char** argv){
     //reading the config file for path
     config c1;
-    c1.initialization();
     c1.parseconfig();
     std::string PATH = c1.get_path();
     std::string BACKUP_PATH = c1.get_backup();
@@ -53,16 +70,15 @@ void add_handle(int argc, char** argv){
             m1.save(PATH);
         }
         else {
-            throw std::runtime_error("jrnl: too many arguments to 'add'\n Usage: jrnl add [entry] tag [tag-optional]\n");
+            throw std::runtime_error("jrnlc: too many arguments to 'add'\n Usage: jrnl add [entry] tag [tag-optional]\n");
         }
     }
-    throw std::runtime_error("jrnl: add - invalid use");
+    throw std::runtime_error("jrnlc: add - invalid use");
 }
 
-int display_handle(int argc, char** argv){
+void display_handle(int argc, char** argv){
     //reading the config file for path
     config c1;
-    c1.initialization();
     c1.parseconfig();
     const ColorTemplate& colors = c1.get_colors(); 
     std::string PATH = c1.get_path();
@@ -83,7 +99,7 @@ int display_handle(int argc, char** argv){
             //--before flag
             if(arg == "--before"){
                 if(i+1 >= argc){
-                    throw std::runtime_error("Unspecified time range; usage - jrnl --before YYYY-MM-DD HH:MM");
+                    throw std::runtime_error("Unspecified time range; usage - jrnlc --before YYYY-MM-DD HH:MM");
                 }
                 else{
                     std::string time = argv[i+1];
@@ -94,7 +110,7 @@ int display_handle(int argc, char** argv){
             //--after flag
             else if(arg == "--after"){
                 if(i+1 >= argc){
-                    throw std::runtime_error("Unspecified time range; usage - jrnl --before YYYY-MM-DD HH:MM");
+                    throw std::runtime_error("Unspecified time range; usage - jrnlc --before YYYY-MM-DD HH:MM");
                 }
                 else{
                     std::string time = argv[i+1];
@@ -114,7 +130,7 @@ int display_handle(int argc, char** argv){
             //so range SHOULD be the only term accepted which doesn't start with '--'
             else if(arg.size() < 2 || arg[0] != '-' || arg[1] != '-'){
                 if(flags.range){
-                    throw std::runtime_error("jrnl: too many arguments for range \n");
+                    throw std::runtime_error("jrnlc: too many arguments for range \n");
                 }
                 else{
                     flags.range = argv[i];
@@ -126,10 +142,9 @@ int display_handle(int argc, char** argv){
     m1.show(flags, colors);
 }
 
-int backup_handle(int argc, char** argv){
+void backup_handle(int argc, char** argv){
     //reading the config file for path
     config c1;
-    c1.initialization();
     c1.parseconfig();
     std::string PATH = c1.get_path();
     std::string BACKUP_PATH = c1.get_backup();
@@ -149,7 +164,7 @@ int backup_handle(int argc, char** argv){
         m1.backup(BACKUP_PATH);
     }
     else{
-        throw std::runtime_error("backup - too many arguments");
+        throw std::runtime_error("jrnlc: backup - too many arguments");
     }
 
 

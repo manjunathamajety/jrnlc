@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <stdexcept>
 #include <unordered_map>
+#include <optional>
 
 #ifndef CONFIG_H
 #define CONFIG_H
@@ -28,14 +29,14 @@ class config{
 
     public:
         config();
-        std::string get_path(){ if(local_path){return local_path;} else{return PATH;}}
-        std::string get_backup(){ if(local_backup){return local_backup;} else{return BACKUP_PATH;}} 
+        std::string get_path(){ return local_path.value_or(PATH);}
+        std::string get_backup(){ return local_backup.value_or(BACKUP_PATH);} 
 
         void global_init();
         void parseconfig();
         void local_init();
         const ColorTemplate& get_colors(){return colors;}
-        
+        void resolve_local_or_global(bool is_local);        
 };
 
 #endif 

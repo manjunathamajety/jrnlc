@@ -164,8 +164,8 @@ void config::local_init(){
         throw std::runtime_error("Mate, coudln't create local jrnl");
     }
     else{
-        std::cout<<"Local jrnl created at path: "<<local_jrnl;
-        local_path = local_test;
+        std::cout<<"Local jrnl created at path: "<<local_jrnl_test;
+        local_path = local_jrnl_test;
         local_backup = local_backup_test;
     }
 }

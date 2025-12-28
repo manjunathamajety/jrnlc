@@ -13,6 +13,7 @@ int main(int argc,char** argv){
         if(arg == "add") {add_handle(argc-2,argv+2);}
         else if(arg == "show") {display_handle(argc-2,argv+2);}
         else if(arg == "backup") {backup_handle(argc-2,argv+2);}
+        else if(arg == "init") {init_handle(argc-2,argv+2);}
         else {global_help();}
         return 0;
     }
