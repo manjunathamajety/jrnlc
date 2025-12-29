@@ -1,106 +1,31 @@
-# jrnl
+# jrnlc
 
 A tiny terminal-based journaling tool written in C++.
 
-`jrnl` is a personal project built to be simple, fast, and predictable. It stores
+`jrnlc` is a personal project built to be simple, fast, and predictable. It stores
 journal entries in a plain-text file and focuses on minimalism rather than features.
 No database, no cloud sync — just text on disk.
 
 This project also served as a learning exercise in modern C++, POSIX file handling,
 and basic CLI design.
 
-## Features
+# # Features
 
+- Local (directory specific) and global journals.
 - Add journal entries from command-line arguments or stdin
 - Optional tags for entries
 - Display entries using ranges
 - Filter entries by time (`--before`, `--after`)
 - Atomic file writes (write-to-temp + rename)
 - Plain-text, human-readable storage format
-- Config file to store journal path, color codes 
+- Config file to store journal path and color codes 
 - Optional ANSI colorized output (configurable)
+- Compatible with Unix tools like grep, less, echo etc.
+# # Installation
 
-## Example Usage
+# ## Build from source
 
-```sh
-jrnl add "met a cat today" mood
-jrnl add "this came from stdin"
-echo "piped thoughts" | jrnl add
-
-jrnl show *  #displays the entire jrnl
-jrnl show 3  #displays the 3rd entry
-jrnl show *5 #displays first 5 entries
-jrnl show 5* #displays last 5 entries
-jrnl show --after "2025-01-01 10:00"
-jrnl show --before "2025-01-10 18:30"
-jrnl show --after "2025-01-10 00:00" --before "2025-02-10 00:00"
-jrnl show | grep "new-year" #can be composed for more search options
-
-Both range based and time based filters can be composed with one another. 
-
-```sh
-jrnl show --after "2025-01-01 10:00" "*5"
-jrnl show --after "2025-01-01 10:00" "5*"
-
-jrnl show --before "2025-01-10 18:30" "*9"
-jrnl show --before "2025-01-10 18:30" "9*"
-```
-Backup can be generated as follows;
-```sh
-jrnl backup #autogenerates backup's name with current timestamp
-jrnl backup "backup@newyear" #custom backup name
-```
-
-## Storage Format
-
-Journal entries are stored as one entry per line in a plain-text file:
-
-```sh
-id;tag;timestamp;text
-```
-- `id`        : Auto-generated numeric identifier
-- `tag`       : User-provided label (defaults to `jrnl`)
-- `timestamp` : Unix timestamp (`time_t`)
-- `text`      : Journal entry content
-
-This format is intentionally simple so entries can be inspected, backed up,
-or processed using standard Unix tools.
-
-Manual edits are possible, but malformed or partially corrupted entries
-may be skipped when loading.
-
-## Configuration
-
-On first run, `jrnl` automatically creates a configuration file at:
-
-- `$XDG_CONFIG_HOME/jrnl/jrnl.txt`
-- or `~/.config/jrnl/jrnl.txt` if `XDG_CONFIG_HOME` is not set
-
-The configuration file allows customization of:
-
-- Journal storage path
-- Backup directory
-- ANSI color codes (256-color) for output
-
-Example configuration:
-```sh
-PATH$/home/user/.local/share/jrnl/journal.txt
-
-BACKUP_PATH$/home/user/.local/share/jrnl/backup
-
-Id$32
-Tag$34
-Time$32
-Text$37
-```
-
-Lines starting with `#` are treated as comments.
-
-## Installation
-
-### Build from source
-
-`jrnl` uses CMake for building and installation.
+`jrnlc` uses CMake for building and installation.
 
 Requirements:
 - CMake ≥ 3.10
@@ -110,8 +35,8 @@ Requirements:
 Clone the repository and build:
 
 ```sh
-git clone https://github.com/<your-username>/jrnl.git
-cd jrnl
+git clone https://github.com/<your-username>/jrnlc.git
+cd jrnlc
 mkdir build
 cd build
 cmake ..
@@ -122,8 +47,112 @@ To install the binary to your system
 sudo make install
 ```
 
-## Design Notes
+# # Configuration
 
+On first run, to create a global journal, run
+```sh
+jrnlc init --global
+```
+This automatically creates a config file at the location,
+- `$XDG_CONFIG_HOME/jrnlc/jrnlc.txt`
+- or `~/.config/jrnlc/jrnlc.txt` if `XDG_CONFIG_HOME` is not set
+
+The configuration file allows customization of:
+
+- Journal storage path
+- Backup directory
+- ANSI color codes (256-color) for output
+
+Example configuration:
+```sh
+PATH$/home/user/.local/share/jrnlc/journal.txt
+
+BACKUP_PATH$/home/user/.local/share/jrnlc/backup
+
+Id$32
+Tag$34
+Time$32
+Text$37
+```
+
+Lines starting with `# ` are treated as comments.
+
+To create local journals, in specific directories, run
+
+```sh
+jrnlc init --local
+```
+This creates a sub-directory in the current working directory,
+- `.jrnlc/` with journal location as `.jrnlc/journal.txt`
+- backup location as '.jrnlc/backup'
+
+# ## Local vs Global Journals
+
+`jrnlc` supports **local journals** (directory-specific) and a **global journal** (user-wide).  
+- **Local journals** are stored inside a `.jrnlc/` folder in the current directory.  
+- **Global journal** is stored in the config directory (`~/.config/jrnlc/jrnlc.txt` or `$XDG_CONFIG_HOME/jrnlc/jrnlc.txt`).  
+
+If both exist, `jrnlc` commands default to the **local journal** unless `--global` is specified.
+
+
+
+# # Example Usage
+
+```sh
+jrnlc init --local # initialize local journal in that repository.
+jrnlc init --global # initialize global journal
+
+jrnlc add "met a cat today" mood
+jrnlc add "this came from stdin"
+echo "piped thoughts" | jrnlc add
+
+jrnlc show *  # displays the entire jrnlc
+jrnlc show 3  # displays the 3rd entry
+jrnlc show *5 # displays first 5 entries
+jrnlc show 5* # displays last 5 entries
+jrnlc show --after "2025-01-01 10:00"
+jrnlc show --before "2025-01-10 18:30"
+jrnlc show --after "2025-01-10 00:00" --before "2025-02-10 00:00"
+jrnlc show | grep "new-year" # can be composed for more search options
+
+Both range based and time based filters can be composed with one another. 
+```
+
+```sh
+jrnlc show --after "2025-01-01 10:00" "*5"
+jrnlc show --after "2025-01-01 10:00" "5*"
+
+jrnlc show --before "2025-01-10 18:30" "*9"
+jrnlc show --before "2025-01-10 18:30" "9*"
+```
+Backup can be generated as follows;
+```sh
+jrnlc backup # autogenerates backup's name with current timestamp
+jrnlc backup "backup@newyear" # custom backup name
+```
+
+# # Storage Format
+
+Journal entries are stored as one entry per line in a plain-text file:
+
+```sh
+id;tag;timestamp;text
+```
+- `id`        : Auto-generated numeric identifier
+- `tag`       : User-provided label (defaults to `jrnlc`)
+- `timestamp` : Unix timestamp (`time_t`)
+- `text`      : Journal entry content
+
+This format is intentionally simple so entries can be inspected, backed up,
+or processed using standard Unix tools.
+
+Manual edits are possible, but malformed or partially corrupted entries
+may be skipped when loading.
+
+# # Design Notes
+
+
+- Operations are performed on local journal (if it exists), by default unless specified otherwise via --global flag. If local journal is absent, operations are performed on global by default.
 - Journal IDs are generated automatically by the tool
 - Timestamps are stored as `time_t`
 - Entries are appended in chronological order
@@ -133,16 +162,16 @@ sudo make install
 The tool assumes it is the sole writer of the journal file.
 Concurrent writes or external modification are not supported.
 
-## Non-goals
+# # Non-goals
 
-`jrnl` intentionally does not aim to:
+`jrnlc` intentionally does not aim to:
 
 - Provide encryption or secrecy guarantees, Human-readability is the aim
 - Support concurrent writers
 - Replace full-featured journaling or note-taking applications
 - Offer cloud sync or cross-device features
 
-It aims to follow Unix philosophy of "Do one thing, but do it well". Hence the features to pipe with other unix tools as well. 
+It aims to follow UNIX philosophy of "Do one thing, but do it well". Hence the features to pipe with other Unix tools as well. 
 
 
 

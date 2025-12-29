@@ -157,7 +157,7 @@ void config::parseconfig(){
 //this just initializes a local jrnl when called upon
 void config::local_init(){
     std::filesystem::path cwd = std::filesystem::current_path();
-    std::string local_jrnl_test = std::string(cwd)+"/.jrnlc/jrnl.txt";
+    std::string local_jrnl_test = std::string(cwd)+"/.jrnlc/journal.txt";
     std::string local_backup_test = std::string(cwd)+"/.jrnlc/backup";
     bool file_check = check_create_parent_dir(local_jrnl_test);
     if(file_check == false){
@@ -173,7 +173,7 @@ void config::local_init(){
 void config::resolve_local_or_global(bool is_local){
     if(is_local == true){    
         std::filesystem::path cwd =  std::filesystem::current_path();
-        std::string local_jrnl_test = std::string(cwd)+"/.jrnlc/jrnl.txt";
+        std::string local_jrnl_test = std::string(cwd)+"/.jrnlc/journal.txt";
         std::string local_backup_test = std::string(cwd)+"/.jrnlc/backup";
 
         if(std::filesystem::exists(local_jrnl_test)){

@@ -5,7 +5,21 @@ jrnlc \- minimal CLI journaling tool
 
 .SH SYNOPSIS
 .B jrnlc
-.RI [ operation ] " [entry/specifier]"
+.B init
+.RI [ --local | --global]
+
+
+.B jrnlc
+.B add
+.RI [ TEXT ] " " [ tag ] " " [ --local | --global ]
+
+.B jrnlc
+.B show
+.RI [ specifier ] " " [ options ] " " [ --local | --global ]
+
+.B jrnlc
+.B backup
+.RI [ filename ]
 
 .SH DESCRIPTION
 jrnlc is a small command-line journaling tool that stores
@@ -14,8 +28,9 @@ filtering based on time and ranges.
 
 .SH OPTIONS
 .TP
-.BR add " " TEXT " " [tag]
-Add a new journal entry with an optional tag.
+.BR add " " TEXT " " --tag " " [tag]
+Add a new journal entry with an optional tag. If no tag is
+provided, the previous entry's tag may be reused.
 
 .TP
 .BR show " " --before " " TIME
@@ -32,6 +47,14 @@ Show the first N entries.
 .TP
 .BR show " " N*
 Show the last N entries.
+
+.TP
+.BR --local
+Operate on the local journal in the current directory.
+
+.TP
+.BR --global
+Operate on the global journal.
 
 .TP
 .B TIME format
@@ -52,18 +75,21 @@ Show version information and exit.
 
 .SH FILES
 .TP
-.I $XDG_DATA_HOME/jrnlc/backup
-Default backup directory.
+.I $XDG_DATA_HOME/jrnlc/journal.txt
+Default global journal storage file.
 
 .TP
-.I $XDG_DATA_HOME/jrnlc/journal.txt
-Default journal storage file.
+.I $XDG_DATA_HOME/jrnlc/backup
+Default backup directory.
 
 .TP
 .I $XDG_CONFIG_HOME/jrnlc/config
 Configuration file.
 
 .SH NOTES
+If a local journal is not present, jrnlc falls back to the
+global journal unless --local is explicitly specified.
+
 jrnlc is intentionally minimal. Each invocation performs a
 single operation, following traditional Unix command-line
 tool design. Journal data is stored in plain text and is
