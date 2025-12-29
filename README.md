@@ -35,8 +35,8 @@ Requirements:
 Clone the repository and build:
 
 ```sh
-git clone https://github.com/<your-username>/jrnlc.git
-cd jrnlc
+git clone https://github.com/manjunathamajety/journal-cli.git
+cd journal-cli
 mkdir build
 cd build
 cmake ..
@@ -171,7 +171,7 @@ Concurrent writes or external modification are not supported.
 - Replace full-featured journaling or note-taking applications
 - Offer cloud sync or cross-device features
 
-It aims to follow UNIX philosophy of "Do one thing, but do it well". Hence the features to pipe with other Unix tools as well. 
+It aims to follow Unix philosophy of "Do one thing, but do it well". Hence the features to pipe with other Unix tools as well. 
 
 
 
