@@ -35,8 +35,8 @@ Requirements:
 Clone the repository and build:
 
 ```sh
-git clone https://github.com/manjunathamajety/journal-cli.git
-cd journal-cli
+git clone https://github.com/manjunathamajety/jrnlc.git
+cd jrnlc
 mkdir build
 cd build
 cmake ..
