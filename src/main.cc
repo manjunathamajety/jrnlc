@@ -4,7 +4,7 @@
 #include <config.h>
 #include <parse.h>
 #include <help.h>
-#define VERSION "0.2.2"
+#define VERSION "0.2.1"
 int main(int argc,char** argv){
     try{        
         if(argc < 2){global_help(); return 0;}
