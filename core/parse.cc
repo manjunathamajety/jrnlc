@@ -5,10 +5,10 @@
 
 void init_handle(int argc, char** argv){
     if(argc == 0){
-        throw std::runtime_error("jrnlc: init - invalid usage \n Usage jrnlc init [--global/--local]");
+        throw std::runtime_error("init - invalid usage \n Usage jrnlc init [--global/--local]");
     }    
     else if(argc > 1){ 
-        throw std::runtime_error("jrnlc: init - too many arguments \n Usage jrnlc init [--global/--local]");
+        throw std::runtime_error("init - too many arguments \n Usage jrnlc init [--global/--local]");
     }
     else{
         std::string flag = argv[0];
@@ -16,7 +16,7 @@ void init_handle(int argc, char** argv){
             config c1;
             c1.global_init();
         }
-        if(flag == "--local"){
+        else if(flag == "--local"){
             config c1;
             c1.local_init();
         }
