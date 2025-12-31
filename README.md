@@ -36,6 +36,26 @@ This allows fast journaling without repeatedly retyping tags, while still allowi
 
 # # Installation
 
+# ## Installation (Arch Linux)
+
+jrnlc is available in the Arch User Repository (AUR).
+
+Using an AUR helper (recommended):
+
+```sh
+yay -S jrnlc
+```
+Or clone and build manually from AUR:
+```sh
+git clone https://aur.archlinux.org/jrnlc.git
+cd jrnlc
+makepkg -si
+```
+After installation, see the manual page with:
+```sh
+man jrnlc
+```
+
 # ## Build from source
 
 `jrnlc` uses CMake for building and installation.
@@ -115,7 +135,7 @@ If both exist, `jrnlc` commands default to the **local journal** unless `--globa
 jrnlc init --local # initialize local journal in that repository.
 jrnlc init --global # initialize global journal
 
-jrnlc add "met a cat today" mood
+jrnlc add "met a cat today" --tag "mood" #unless specified otherwise, every entry after this will have the tag "mood"
 jrnlc add "this came from stdin"
 echo "piped thoughts" | jrnlc add
 
