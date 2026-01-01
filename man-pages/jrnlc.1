@@ -98,14 +98,29 @@ Show version information and exit.
 .TP
 .I $XDG_DATA_HOME/jrnlc/journal.txt
 Default global journal storage file.
+If
+.I XDG_DATA_HOME
+is not set,
+.I ~/.local/share/jrnlc/journal.txt
+is used instead.
 
 .TP
 .I $XDG_DATA_HOME/jrnlc/backup
 Default backup directory.
+If
+.I XDG_DATA_HOME
+is not set,
+.I ~/.local/share/jrnlc/backup
+is used instead.
 
 .TP
-.I $XDG_CONFIG_HOME/jrnlc/config
+.I $XDG_CONFIG_HOME/jrnlc/jrnl.txt
 Configuration file.
+If
+.I XDG_CONFIG_HOME
+is not set,
+.I ~/.config/jrnlc/jrnl.txt
+is used instead.
 
 .SH NOTES
 If a local journal is not present, jrnlc falls back to the
