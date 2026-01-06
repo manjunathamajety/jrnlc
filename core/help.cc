@@ -21,12 +21,12 @@ void global_help() {
         << "Ranges (used with `show`):\n"
         << "  *       All entries\n"
         << "  N       Entry with id N\n"
-        << "  *N      First N entries\n"
-        << "  N*      Last N entries\n"
+        << "  :N      First N entries\n"
+        << "  N:      Last N entries\n"
         << "\n"
         << "Example:\n"
         << "  jrnl add \"met a cat\" mood\n"
-        << "  jrnl show *10 --global\n";
+        << "  jrnl show :10 --global\n";
 }
 
 void add_help() {
@@ -56,8 +56,8 @@ void show_help() {
         << "Ranges:\n"
         << "  *       All entries\n"
         << "  N       Entry with id N\n"
-        << "  *N      First N entries\n"
-        << "  N*      Last N entries\n"
+        << "  :N      First N entries\n"
+        << "  N:      Last N entries\n"
         << "\n"
         << "Options:\n"
         << "  --local     Use local journal\n"

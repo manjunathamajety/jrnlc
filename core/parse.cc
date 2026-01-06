@@ -143,7 +143,7 @@ void show_handle(int argc, char** argv){
             //before flag
             else if(arg == "--before"){
                 if(i+1 >= argc){
-                    throw std::runtime_error("show - unspecified time range; usage - jrnlc --before YYYY-MM-DD HH:MM");
+                    throw std::runtime_error("show - unspecified time range \n Usage - jrnlc show --before YYYY-MM-DD HH:MM");
                 }
                 else{
                     std::string time = argv[i+1];
@@ -154,13 +154,13 @@ void show_handle(int argc, char** argv){
             //--after flag
             else if(arg == "--after"){
                 if(i+1 >= argc){
-                    throw std::runtime_error("show - unspecified time range; usage - jrnlc --before YYYY-MM-DD HH:MM");
+                    throw std::runtime_error("show - unspecified time range\n Usage - jrnlc show --before YYYY-MM-DD HH:MM");
                 }
                 else{
                     std::string time = argv[i+1];
                     flags.after = time_parse(time);
                     i++;
-                } 
+                }
             }
             //--color flag -> to force color in show fuction
             else if(arg == "--color"){
@@ -172,6 +172,37 @@ void show_handle(int argc, char** argv){
             }
             else if(arg == "--global"){
                 is_local = false;
+            }
+            else if(arg == "--first"){
+                if(flags.range){
+                    throw std::runtime_error("show - too many arguments for range");
+                }
+                else{
+                    if(i+1 >= argc){
+                        throw std::runtime_error("show - unspecified range \n Usage - jrnlc show --first [num]");
+                    }
+                    else{
+                        std::string num = argv[i+1];
+                        flags.range = ":"+num;
+                        i++;
+                    }
+                }
+            }
+            else if(arg == "--last"){
+                if(flags.range){
+                    throw std::runtime_error("show - too many arguments for range");
+                }
+                else{
+                    if(i+1 >= argc){
+                        throw std::runtime_error("show - unspecified range \n Usage - jrnlc show --first [num]");
+                    }
+                    else{
+                        std::string num = argv[i+1];
+                        flags.range = num+":";
+                        i++;
+                    }
+                }
+                
             }
             //check for range, which doesn't follow the flag format
             //so range SHOULD be the only term accepted which doesn't start with '--'

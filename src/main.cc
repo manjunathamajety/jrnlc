@@ -4,7 +4,7 @@
 #include <config.h>
 #include <parse.h>
 #include <help.h>
-#define VERSION "0.2.2"
+#define VERSION "0.3.0"
 int main(int argc,char** argv){
     try{        
         if(argc < 2){global_help(); return 0;}
@@ -22,5 +22,11 @@ int main(int argc,char** argv){
     catch(const std::runtime_error& e){
         std::cerr<<"jrnl: "<<e.what()<<"\n";
         return 1;
+    }
+    catch(const std::invalid_argument& e){
+        std::cerr<<"jrnl: "<<e.what()<<" Invalid argument passed \n For help, use jrnlc [function] --help"<<"\n";
+    }
+    catch(const std::out_of_range& e){
+        std::cerr<<"jrnl: "<<e.what()<<" Invalid argument passed \n For help, use jrnlc [function] --help"<<"\n";
     }
 }

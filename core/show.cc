@@ -39,7 +39,7 @@ void Manager::show(const ShowFlag& flags, const ColorTemplate& colors){
         if(st == "*"){
             //do nothing :)
         }
-        else if(st[0] != '*' && st[st.length()-1] != '*'){
+        else if(st[0] != ':' && st[st.length()-1] != ':'){
             int num;
             num = std::stoi(st);
             if(num > jrnl_manager.size() || num <= 0){
@@ -51,7 +51,7 @@ void Manager::show(const ShowFlag& flags, const ColorTemplate& colors){
             }
         }
         else if(st.length() >= 2){
-            if(st[0] == '*'){
+            if(st[0] == ':'){
                 int num = std::stoi(st.substr(1,st.size()-1));
                 if(num > jrnl_manager.size() || num <= 0){
                     throw std::runtime_error("Yeah mate, you can't expect me to show beyond what's present in your jrnl -_-, whatever... range-error");
@@ -61,7 +61,7 @@ void Manager::show(const ShowFlag& flags, const ColorTemplate& colors){
                     end = start + num;
                 }
             }
-            else if(st[st.length()-1] == '*'){
+            else if(st[st.length()-1] == ':'){
                 int num = std::stoi(st.substr(0,st.size()-1));
                 if( num > jrnl_manager.size() || num <= 0){
                     throw std::runtime_error("I can't show journal entires you haven't created yourself. whatever... range-error");
@@ -71,6 +71,9 @@ void Manager::show(const ShowFlag& flags, const ColorTemplate& colors){
                     start = end - num;
                 }
             }
+        }
+        else{
+            throw std::runtime_error("show - Invalid range specified \n Usage jrnlc show :n or jrnlc show n: ");
         }
     }
     std::string id_color,tag_color,time_color,text_color;
