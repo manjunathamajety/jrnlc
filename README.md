@@ -156,9 +156,8 @@ jrnlc show --after "2025-01-01 10:00"
 jrnlc show --before "2025-01-10 18:30"
 jrnlc show --after "2025-01-10 00:00" --before "2025-02-10 00:00"
 jrnlc show | grep "new-year" # can be composed for more search options
-
-Both range based and time based filters can be composed with one another. 
 ```
+Both range based and time based filters can be composed with one another. 
 
 ```sh
 jrnlc show --after "2025-01-01 10:00" ":5"
