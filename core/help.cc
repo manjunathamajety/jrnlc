@@ -56,15 +56,20 @@ void show_help() {
         << "Ranges:\n"
         << "[None]    All entries\n"
         << "  N       Entry with id N\n"
-        << "  :N      First N entries\n"
-        << "  N:      Last N entries\n"
+        << "--first N First N entries\n"
+        << "  :N      First N entries[shorthand notation]\n"
+        << "--last N  Last N entires\n"
+        << "  N:      Last N entries[shorthand notation]\n"
         << "\n"
+        << "Time-Based Range:\n"
+        << "  --after  <time> Show entries after <time>\n"
+        << "  --before <time> Show entries before <time>\n"   
         << "Options:\n"
         << "  --local     Use local journal\n"
         << "  --global    Use global journal\n"
         << "\n"
         << "Notes:\n"
-        << "  - Malformed entries may be skipped\n";
+        << "  - Malformed/Corrupted entries will be skipped\n";
 }
 
 void init_help() {

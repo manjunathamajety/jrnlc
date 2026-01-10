@@ -124,7 +124,7 @@ void show_handle(int argc, char** argv){
     //buffer to find what the user preference is 
     std::optional<bool> color_buf;
     if (argc == 0){
-        flags.range = "*";
+        flags.range = ":";
     } 
     else {
         for(int i = 0; i < argc; i++){

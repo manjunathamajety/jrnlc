@@ -36,7 +36,10 @@ void Manager::show(const ShowFlag& flags, const ColorTemplate& colors){
         const std::string st = flags.range.value();
         //manual parsing logic to set start and end based upon the request
             //function to print the entire journal
-        if(st[0] != ':' && st[st.length()-1] != ':'){
+        if(st[0] == ':' && st.length() == 1){
+            //do nothing as this condition means, to print the entire journal
+        }
+        else if(st[0] != ':' && st[st.length()-1] != ':'){
             int num;
             num = std::stoi(st);
             if(num > jrnl_manager.size() || num <= 0){
@@ -97,7 +100,6 @@ void Manager::show(const ShowFlag& flags, const ColorTemplate& colors){
     else{
         width = lastid_digits(jrnl_manager.back().getid());
     }
-    
     for(size_t i = start; i < end; i++){
             //each iteration of loop loads the corresponding jrnl_manager element into a temporary variable for display
                 size_t id = jrnl_manager[i].getid();

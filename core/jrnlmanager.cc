@@ -65,7 +65,6 @@ void Manager::loadentry(std::string PATH){
             std::cerr<<"Corrupted entry: "<<PATH<<":"<<line_no<<": skipping this entry \n";
             continue;
         }
-        
         try{
             size_t entry_id=std::stoi(id);
             long long times=std::stoll(stamp);
@@ -82,7 +81,7 @@ void Manager::loadentry(std::string PATH){
 
         }   
         catch(const std::exception& e){
-            std::cerr<<"Jrnl: "<<PATH<<":"<<line_no<<"corrupted entry ("<<e.what()<<"), skipping\n";
+            std::cerr<<"Jrnl: "<<PATH<<": "<<line_no<<" corrupted entry ("<<e.what()<<"), skipping\n";
             continue;
 
         }
