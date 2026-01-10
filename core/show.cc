@@ -36,10 +36,7 @@ void Manager::show(const ShowFlag& flags, const ColorTemplate& colors){
         const std::string st = flags.range.value();
         //manual parsing logic to set start and end based upon the request
             //function to print the entire journal
-        if(st == "*"){
-            //do nothing :)
-        }
-        else if(st[0] != ':' && st[st.length()-1] != ':'){
+        if(st[0] != ':' && st[st.length()-1] != ':'){
             int num;
             num = std::stoi(st);
             if(num > jrnl_manager.size() || num <= 0){

@@ -139,10 +139,10 @@ jrnlc add "met a cat today" --tag "mood" #unless specified otherwise, every entr
 jrnlc add "this came from stdin"
 echo "piped thoughts" | jrnlc add
 
-jrnlc show *  # displays the entire jrnlc
+jrnlc show    # displays the entire jrnlc
 jrnlc show 3  # displays the 3rd entry
-jrnlc show *5 # displays first 5 entries
-jrnlc show 5* # displays last 5 entries
+jrnlc show :5 # displays first 5 entries
+jrnlc show 5: # displays last 5 entries
 jrnlc show --after "2025-01-01 10:00"
 jrnlc show --before "2025-01-10 18:30"
 jrnlc show --after "2025-01-10 00:00" --before "2025-02-10 00:00"
@@ -152,11 +152,11 @@ Both range based and time based filters can be composed with one another.
 ```
 
 ```sh
-jrnlc show --after "2025-01-01 10:00" "*5"
-jrnlc show --after "2025-01-01 10:00" "5*"
+jrnlc show --after "2025-01-01 10:00" ":5"
+jrnlc show --after "2025-01-01 10:00" "5:"
 
-jrnlc show --before "2025-01-10 18:30" "*9"
-jrnlc show --before "2025-01-10 18:30" "9*"
+jrnlc show --before "2025-01-10 18:30" ":9"
+jrnlc show --before "2025-01-10 18:30" "9:"
 ```
 Backup can be generated as follows;
 ```sh

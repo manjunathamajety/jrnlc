@@ -20,13 +20,13 @@ int main(int argc,char** argv){
         return 0;
     }
     catch(const std::runtime_error& e){
-        std::cerr<<"jrnl: "<<e.what()<<"\n";
+        std::cerr<<"jrnlc: "<<e.what()<<"\n";
         return 1;
     }
     catch(const std::invalid_argument& e){
-        std::cerr<<"jrnl: "<<e.what()<<" Invalid argument passed \n For help, use jrnlc [function] --help"<<"\n";
+        std::cerr<<"jrnlc: "<<e.what()<<" Invalid argument passed \n For help, use jrnlc [function] --help"<<"\n";
     }
     catch(const std::out_of_range& e){
-        std::cerr<<"jrnl: "<<e.what()<<" Invalid argument passed \n For help, use jrnlc [function] --help"<<"\n";
+        std::cerr<<"jrnlc: "<<e.what()<<" Invalid argument passed \n For help, use jrnlc [function] --help"<<"\n";
     }
 }
