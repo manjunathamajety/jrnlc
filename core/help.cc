@@ -25,7 +25,7 @@ void global_help() {
         << "  N:       Last N entries\n"
         << "\n"
         << "Example:\n"
-        << "  jrnl add \"met a cat\" mood\n"
+        << "  jrnl add \"met a cat\" --tag mood \n"
         << "  jrnl show :10 --global\n";
 }
 
@@ -34,7 +34,7 @@ void add_help() {
         << "jrnl add — add a journal entry\n"
         << "\n"
         << "Usage:\n"
-        << "  jrnl add <entry> [tag] [--local|--global]\n"
+        << "  jrnl add <entry> --tag [tag] [--local|--global]\n"
         << "  jrnl add              (read entry from stdin)\n"
         << "\n"
         << "Options:\n"
