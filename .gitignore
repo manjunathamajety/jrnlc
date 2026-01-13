@@ -10,4 +10,4 @@ build/
 
 #docs directory, excluding everything except the pdf file
 docs/*
-#!docs/design.pdf
+!docs/design.pdf
