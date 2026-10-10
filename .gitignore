@@ -1,0 +1,13 @@
+# build outputs
+jrnl
+jrnl.exe
+*.obj
+*.pdb
+*.out
+
+# generated test checkout
+.jrnl-upstream/
+
+# local journals
+*.txt
+.jrnlc/

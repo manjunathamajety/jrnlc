@@ -1,0 +1,165 @@
+.TH JRNL 1 "2026-10-10" "jrnlc 0.1.0" "User Commands"
+.SH NAME
+jrnl \- small plain-text command-line journal
+.SH SYNOPSIS
+.B jrnl
+.RI [ options ]
+.RI [ text ... ]
+.SH DESCRIPTION
+.B jrnl
+stores entries in the plain-text format used by Python jrnl:
+.PP
+.nf
+[YYYY-MM-DD HH:MM] entry text @tag
+.fi
+.PP
+With no search option, positional text is appended as a new entry. If no text
+is supplied, input is read from standard input.
+.SH ADDING ENTRIES
+.TP
+.BI "jrnl " "text ..."
+Add an entry using the current local time.
+.TP
+.BI "jrnl --date " "YYYY-MM-DD HH:MM text ..."
+Add an entry with an explicit timestamp.
+.TP
+.BI "jrnl --daily --journal-dir " "DIR text ..."
+Add to the file named
+.I journal-YYYY-MM-DD
+in
+.I DIR.
+.SH SEARCH OPTIONS
+.TP
+.BI "-n " N
+Show the last
+.I N
+matching entries.
+.TP
+.BI "-contains " TERM
+Match entry text. May be repeated.
+.TP
+.BI @TAG
+Match entries containing the tag.
+.TP
+.BR -and
+Require all positive selectors to match.
+.TP
+.BR -not
+Negate the following selector.
+.TP
+.BR -starred
+Match entries whose first line ends in an asterisk.
+.TP
+.BI "-from " DATE
+Use an inclusive lower date bound.
+.TP
+.BI "-to " DATE
+Use an inclusive upper date bound.
+.TP
+.BI "-until " DATE
+Alias for
+.BR -to .
+.TP
+.BI "-on " DATE
+Match entries on one date, or one whole month when
+.I DATE
+is written as
+.IR "Month YYYY" .
+.PP
+Dates may be written as
+.I YYYY-MM-DD
+or
+.IR "Month YYYY" .
+.SH OUTPUT
+.TP
+.BI "--format " FORMAT
+Use
+.BR pretty ,
+.BR short ,
+or
+.BR json
+output.
+.TP
+.BI "--export " FORMAT
+Export matching entries as
+.BR text
+or
+.BR json .
+.TP
+.B --tags
+List unique tags.
+.SH JOURNAL SELECTION
+.TP
+.BI "--journal " PATH
+Read or write one explicit journal file.
+.TP
+.B --local
+Use
+.I .jrnlc/journal.txt.
+.TP
+.B --global
+Use the global journal.
+.TP
+.B --daily
+Read or write date-suffixed journal files in the selected directory.
+.TP
+.BI "--journal-dir " DIR
+Use
+.I DIR
+for daily journal files. Files are named
+.I journal-YYYY-MM-DD
+and are read in lexical order.
+.PP
+Without an explicit selection, an existing local journal is preferred. Otherwise
+the global journal is used. The global path is
+.I $XDG_DATA_HOME/jrnl/journal.txt
+or, when XDG_DATA_HOME is unset,
+.I $HOME/.local/share/jrnl/journal.txt.
+.B JRNL_FILE
+may override the default global path.
+.SH OTHER OPTIONS
+.TP
+.B --help
+Show usage.
+.TP
+.B --version
+Show version.
+.SH FILE SAFETY
+New entries are written through a sibling temporary file. The existing file is
+copied byte-for-byte, the new entry is appended, the temporary file is flushed
+and synchronized, and it is atomically replaced over the original. This keeps
+malformed or manually-added bytes intact and prevents readers from seeing a
+partially-written replacement.
+.PP
+The program assumes a single writer. Atomic replacement does not coordinate
+concurrent writers.
+.SH ENVIRONMENT
+.TP
+.B JRNL_FILE
+Override the default global journal path.
+.TP
+.B XDG_DATA_HOME
+Set the base directory for the global journal.
+.SH EXIT STATUS
+.TP
+.B 0
+Success.
+.TP
+.B 1
+An error occurred.
+.SH LIMITATIONS
+Natural-language date parsing, encryption, editor integration, deletion, and
+the complete Python jrnl configuration format are intentionally outside the
+program. Use an external date helper or GPG when needed.
+.SH EXAMPLES
+.nf
+jrnl "finished the build" @work
+jrnl -from 2025-01-01 -to 2025-01-31
+jrnl -contains build -and @work
+jrnl --daily --journal-dir ~/.jrnl "daily note"
+jrnl --export json > journal.json
+.fi
+.SH LICENSE
+MIT License.
+.SH AUTHOR
+Bharatvaj Hemanth

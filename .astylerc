@@ -1,0 +1,11 @@
+# AStyle configuration for the C hard fork.
+# Based on https://suckless.org/coding_style/
+style=linux
+indent=tab
+attach-namespaces
+pad-header
+unpad-paren
+align-pointer=name
+max-code-length=79
+convert-tabs
+suffix=none
